@@ -12,7 +12,7 @@ export default (props) => {
   const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
 
   return (
-    <>
+    <div>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -29,6 +29,6 @@ export default (props) => {
           </div>
         </div>
         : null}
-    </>
+    </div>
   )
 }

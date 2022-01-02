@@ -24,11 +24,10 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^16.0.0"
-  },
-  "dependencies": {
+    "react": "^16.0.0",
     "formik": "^2.2.9"
   },
+  "dependencies": {},
   "devDependencies": {
     "microbundle-crl": "^0.13.10",
     "babel-eslint": "^10.0.3",
