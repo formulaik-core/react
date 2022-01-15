@@ -1,15 +1,21 @@
 {
-  "name": "formulaik",
-  "version": "1.0.0",
+  "name": "@yelounak/formulaik",
+  "version": "1.0.3",
   "description": "Core formulaik engine.",
   "author": "yelounak",
   "license": "MIT",
-  "repository": "yelounak/formulaik",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yelounak/formulaik"
+  },
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
   "engines": {
     "node": ">=10"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/yelounak"
   },
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
@@ -24,7 +30,7 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
+    "react": ">= 0.16.0 < 18.0.0",
     "formik": "^2.2.9"
   },
   "dependencies": {},
