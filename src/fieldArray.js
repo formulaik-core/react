@@ -115,20 +115,23 @@ export default (props) => {
             </div>
           })}
           {(itemProps.canAddItems && items.length < itemProps.maxItems) &&
-            <button
-              type="button"
-              onClick={() => arrayHelpers.push(itemProps.placeholder())}
-            >
-              +
-            </button>}
+            <div className={`flex justify-center my-10`}>
+              {itemProps.addComponent
+                ? itemProps.addComponent({ onClick: () => arrayHelpers.push(itemProps.placeholder()) })
+                : <button
+                  type="button"
+                  onClick={() => arrayHelpers.push(itemProps.placeholder())}>
+                  +
+                </button>
+              }</div>}
         </div>
       }}
 
-    </FieldArray>
+    </FieldArray >
 
     <ErrorMessage
       name={id}
       component="div"
       className="text-sm text-red-600 pt-2" />
-  </div>
+  </div >
 }
