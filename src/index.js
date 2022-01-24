@@ -1,6 +1,7 @@
 import React from 'react'
 import { Formik } from 'formik'
-import { generateFormContent } from './utils'
+import { generate } from './content'
+//import { useForceUpdate } from "react-custom-hook-use-force-update"
 
 export default (props) => {
   const {
@@ -10,16 +11,25 @@ export default (props) => {
 
   const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
   const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
+  //const forceUpdate = useForceUpdate()
+
+  const onValuesChanged = (values) => {
+    props.onValuesChanged && props.onValuesChanged(values)
+    console.log('onValuesChanged hook')
+    //forceUpdate()
+  }
 
   return (
     <div>
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}>
-        {formProps => generateFormContent({ ...formProps, ...props, initialValues, validationSchema })}
+        {formProps => generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged })}
       </Formik>
-      {error ?
+
+      {error &&
         <div className="alert alert-error mb-4">
           <div className="flex-1">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-6 h-6 mx-2 stroke-current">
@@ -27,8 +37,7 @@ export default (props) => {
             </svg>
             <label>{error.message}</label>
           </div>
-        </div>
-        : null}
+        </div>}
     </div>
   )
 }

@@ -31,7 +31,8 @@
   },
   "peerDependencies": {
     "react": ">= 0.16.0 < 18.0.0",
-    "formik": "^2.2.9"
+    "formik": "^2.2.9",
+    "nanoid": "^3.2.0"
   },
   "dependencies": {},
   "devDependencies": {
