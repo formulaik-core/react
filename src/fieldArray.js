@@ -1,6 +1,18 @@
 import React from 'react'
-import { Field, ErrorMessage, FieldArray } from 'formik'
+import { Field, ErrorMessage as BaseErrorMesssage, FieldArray, getIn } from 'formik'
 import componentInLibraries from './componentInLibraries'
+
+const ErrorMessage = ({ name }) => (
+  <Field
+    name={name}
+    render={({ form }) => {
+      const error = getIn(form.errors, name)
+      const touch = getIn(form.touched, name)
+      return touch && error ? error : null
+    }}
+  />
+)
+
 
 export default (props) => {
   const {
@@ -108,7 +120,7 @@ export default (props) => {
                     customOnValueChanged={onEntryValuesChanged} />
                 }}
               </Field>
-              <ErrorMessage
+              <BaseErrorMesssage
                 name={itemId}
                 component="div"
                 className="text-sm text-red-600 pt-2" />
@@ -126,12 +138,10 @@ export default (props) => {
               }</div>}
         </div>
       }}
-
     </FieldArray >
-
     <ErrorMessage
       name={id}
       component="div"
       className="text-sm text-red-600 pt-2" />
-  </div >
+  </div>
 }

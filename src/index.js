@@ -7,6 +7,7 @@ export default (props) => {
   const {
     onSubmit,
     error,
+    onFormPropsChanged
   } = props
 
   const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
@@ -26,7 +27,11 @@ export default (props) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}>
-        {formProps => generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged })}
+        {formProps => {
+          onFormPropsChanged && onFormPropsChanged(formProps)
+          return generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged })
+        }
+        }
       </Formik>
 
       {error &&

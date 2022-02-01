@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldArray as FieldArray$1, Field as Field$1, ErrorMessage, Form, Formik } from 'formik';
+import { FieldArray as FieldArray$1, Field as Field$1, ErrorMessage as ErrorMessage$1, getIn, Form, Formik } from 'formik';
 import { nanoid } from 'nanoid';
 
 function _extends() {
@@ -37,6 +37,19 @@ var componentInLibraries = (function (props) {
 
   return null;
 });
+
+var ErrorMessage = function ErrorMessage(_ref) {
+  var name = _ref.name;
+  return /*#__PURE__*/React.createElement(Field$1, {
+    name: name,
+    render: function render(_ref2) {
+      var form = _ref2.form;
+      var error = getIn(form.errors, name);
+      var touch = getIn(form.touched, name);
+      return touch && error ? error : null;
+    }
+  });
+};
 
 var FieldArray = (function (props) {
   var values = props.values,
@@ -91,7 +104,7 @@ var FieldArray = (function (props) {
       }, /*#__PURE__*/React.createElement(Field$1, {
         type: entryFormProvider.type,
         name: itemId
-      }, function (_ref) {
+      }, function (_ref3) {
 
         var onRemoveRequired = function onRemoveRequired() {
           remove(index);
@@ -156,17 +169,23 @@ var FieldArray = (function (props) {
           showControls: itemProps.showControls,
           customOnValueChanged: onEntryValuesChanged
         });
-      }), /*#__PURE__*/React.createElement(ErrorMessage, {
+      }), /*#__PURE__*/React.createElement(ErrorMessage$1, {
         name: itemId,
         component: "div",
         className: "text-sm text-red-600 pt-2"
       }));
-    }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React.createElement("button", {
+    }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React.createElement("div", {
+      className: "flex justify-center my-10"
+    }, itemProps.addComponent ? itemProps.addComponent({
+      onClick: function onClick() {
+        return arrayHelpers.push(itemProps.placeholder());
+      }
+    }) : /*#__PURE__*/React.createElement("button", {
       type: "button",
       onClick: function onClick() {
         return arrayHelpers.push(itemProps.placeholder());
       }
-    }, "+"));
+    }, "+")));
   }), /*#__PURE__*/React.createElement(ErrorMessage, {
     name: id,
     component: "div",
@@ -228,7 +247,7 @@ var Field = (function (props) {
       form: form,
       customOnValueChanged: customOnValueChanged
     }));
-  }), /*#__PURE__*/React.createElement(ErrorMessage, {
+  }), /*#__PURE__*/React.createElement(ErrorMessage$1, {
     name: _id,
     component: "div",
     className: "text-sm text-red-600 pt-2"

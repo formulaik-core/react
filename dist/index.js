@@ -40,6 +40,19 @@ var componentInLibraries = (function (props) {
   return null;
 });
 
+var ErrorMessage = function ErrorMessage(_ref) {
+  var name = _ref.name;
+  return /*#__PURE__*/React.createElement(formik.Field, {
+    name: name,
+    render: function render(_ref2) {
+      var form = _ref2.form;
+      var error = formik.getIn(form.errors, name);
+      var touch = formik.getIn(form.touched, name);
+      return touch && error ? error : null;
+    }
+  });
+};
+
 var FieldArray = (function (props) {
   var values = props.values,
       _props$item = props.item,
@@ -93,7 +106,7 @@ var FieldArray = (function (props) {
       }, /*#__PURE__*/React.createElement(formik.Field, {
         type: entryFormProvider.type,
         name: itemId
-      }, function (_ref) {
+      }, function (_ref3) {
 
         var onRemoveRequired = function onRemoveRequired() {
           remove(index);
@@ -163,13 +176,19 @@ var FieldArray = (function (props) {
         component: "div",
         className: "text-sm text-red-600 pt-2"
       }));
-    }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React.createElement("button", {
+    }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React.createElement("div", {
+      className: "flex justify-center my-10"
+    }, itemProps.addComponent ? itemProps.addComponent({
+      onClick: function onClick() {
+        return arrayHelpers.push(itemProps.placeholder());
+      }
+    }) : /*#__PURE__*/React.createElement("button", {
       type: "button",
       onClick: function onClick() {
         return arrayHelpers.push(itemProps.placeholder());
       }
-    }, "+"));
-  }), /*#__PURE__*/React.createElement(formik.ErrorMessage, {
+    }, "+")));
+  }), /*#__PURE__*/React.createElement(ErrorMessage, {
     name: id,
     component: "div",
     className: "text-sm text-red-600 pt-2"
