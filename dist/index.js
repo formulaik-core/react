@@ -98,7 +98,7 @@ var FieldArray = (function (props) {
   }, function (arrayHelpers) {
     var swap = arrayHelpers.swap,
         remove = arrayHelpers.remove;
-    return /*#__PURE__*/React.createElement("div", null, items && items.length && items.map(function (entry, index) {
+    return /*#__PURE__*/React.createElement("div", null, items && items.length > 0 && items.map(function (entry, index) {
       var itemId = id + "." + index;
       return /*#__PURE__*/React.createElement("div", {
         key: index,
@@ -305,7 +305,8 @@ var _generateItemView = function _generateItemView(props) {
 
 var index = (function (props) {
   var onSubmit = props.onSubmit,
-      error = props.error;
+      error = props.error,
+      onFormPropsChanged = props.onFormPropsChanged;
   var initialValues = typeof props.initialValues !== 'function' ? props.initialValues : props.initialValues && props.initialValues();
   var validationSchema = typeof props.validationSchema !== 'function' ? props.validationSchema : props.validationSchema && props.validationSchema();
 
@@ -319,6 +320,7 @@ var index = (function (props) {
     validationSchema: validationSchema,
     onSubmit: onSubmit
   }, function (formProps) {
+    onFormPropsChanged && onFormPropsChanged(formProps);
     return generate(_extends({}, formProps, props, {
       initialValues: initialValues,
       validationSchema: validationSchema,
