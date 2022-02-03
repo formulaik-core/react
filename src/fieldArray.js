@@ -52,7 +52,7 @@ export default (props) => {
       {arrayHelpers => {
         const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
         return <div>
-          {items && items.length && items.map((entry, index) => {
+          {items && items.length > 0 && items.map((entry, index) => {
             const itemId = `${id}.${index}`
             return <div key={index} className={`form-control mb-4 ${className}`}>
               {/* {
