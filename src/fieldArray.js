@@ -13,7 +13,6 @@ const ErrorMessage = ({ name }) => (
   />
 )
 
-
 export default (props) => {
   const {
     values,
@@ -37,6 +36,104 @@ export default (props) => {
     const _values = { ...props.values }
     _values[id] = value
     onValuesChanged && onValuesChanged(_values)
+    //setItems(value)
+  }
+
+
+  const fieldArrayComponent = (arrayHelpers) => {
+
+    const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
+
+    const onAdd = () => {
+      push(itemProps.placeholder())
+    }
+
+    return <div>
+      {(items && items.length > 0) && items.map((entry, index) => {
+        const itemId = `${id}.${index}`
+        return <div key={index} className={`form-control mb-4 ${className}`}>
+          {/* {
+          (label && forceLabel) &&
+          <label className="label">
+            <span>{label}</span>
+          </label>
+        } */}
+
+          <Field type={entryFormProvider.type} name={itemId} >
+            {({ field, form }) => {
+              const onRemoveRequired = () => {
+                remove(index)
+                const _i = [...items]
+                _i.splice(index, 1)
+                customOnValueChanged(_i)
+              }
+
+              const onMoveDownRequired = () => {
+                if (items.length <= index) {
+                  return
+                }
+                swap(index, index + 1)
+
+                const _i = [...items]
+                const object = _i[index]
+                const other = _i[index + 1]
+                _i[index] = other
+                _i[index + 1] = object
+                customOnValueChanged(_i)
+              }
+
+              const onMoveUpRequired = () => {
+                if (index === 0) {
+                  return
+                }
+                swap(index, index - 1)
+
+                const _i = [...items]
+                const object = _i[index]
+                const other = _i[index - 1]
+                _i[index] = other
+                _i[index - 1] = object
+                customOnValueChanged(_i)
+              }
+
+              const onEntryValuesChanged = (value) => {
+                const _i = [...items]
+                _i[index] = value
+                customOnValueChanged(_i)
+              }
+
+              return <Component
+                value={entry}
+                arrayHelpers={arrayHelpers}
+                onMoveDownRequired={onMoveDownRequired}
+                onMoveUpRequired={onMoveUpRequired}
+                onRemoveRequired={onRemoveRequired}
+                item={entryFormProvider}
+                index={index}
+                canMoveUp={itemProps.canMove && (index > 0)}
+                canMoveDown={itemProps.canMove && (index < (items.length - 1))}
+                canRemove={itemProps.canRemove}
+                showControls={itemProps.showControls}
+                customOnValueChanged={onEntryValuesChanged} />
+            }}
+          </Field>
+          <BaseErrorMesssage
+            name={itemId}
+            component="div"
+            className="text-sm text-red-600 pt-2" />
+        </div>
+      })}
+      {(itemProps.canAddItems && items.length < itemProps.maxItems) &&
+        <div className={`flex justify-center my-10`}>
+          {itemProps.addComponent
+            ? itemProps.addComponent({ onClick: onAdd })
+            : <button
+              type="button"
+              onClick={onAdd}>
+              +
+            </button>
+          }</div>}
+    </div>
   }
 
   return <div className={`form-control mb-4 ${className}`}>
@@ -48,97 +145,8 @@ export default (props) => {
     }
     <FieldArray
       type={type}
-      name={id}>
-      {arrayHelpers => {
-        const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
-        return <div>
-          {items && items.length > 0 && items.map((entry, index) => {
-            const itemId = `${id}.${index}`
-            return <div key={index} className={`form-control mb-4 ${className}`}>
-              {/* {
-                (label && forceLabel) &&
-                <label className="label">
-                  <span>{label}</span>
-                </label>
-              } */}
-
-              <Field type={entryFormProvider.type} name={itemId} >
-                {({ field, form }) => {
-                  const onRemoveRequired = () => {
-                    remove(index)
-                    const _i = [...items]
-                    _i.splice(index, 1)
-                    customOnValueChanged(_i)
-                  }
-
-                  const onMoveDownRequired = () => {
-                    if (items.length <= index) {
-                      return
-                    }
-                    swap(index, index + 1)
-
-                    const _i = [...items]
-                    const object = _i[index]
-                    const other = _i[index + 1]
-                    _i[index] = other
-                    _i[index + 1] = object
-                    customOnValueChanged(_i)
-                  }
-
-                  const onMoveUpRequired = () => {
-                    if (index === 0) {
-                      return
-                    }
-                    swap(index, index - 1)
-
-                    const _i = [...items]
-                    const object = _i[index]
-                    const other = _i[index - 1]
-                    _i[index] = other
-                    _i[index - 1] = object
-                    customOnValueChanged(_i)
-                  }
-
-                  const onEntryValuesChanged = (value) => {
-                    const _i = [...items]
-                    _i[index] = value
-                    customOnValueChanged(_i)
-                  }
-
-                  return <Component
-                    value={entry}
-                    arrayHelpers={arrayHelpers}
-                    onMoveDownRequired={onMoveDownRequired}
-                    onMoveUpRequired={onMoveUpRequired}
-                    onRemoveRequired={onRemoveRequired}
-                    item={entryFormProvider}
-                    index={index}
-                    canMoveUp={itemProps.canMove && (index > 0)}
-                    canMoveDown={itemProps.canMove && (index < (items.length - 1))}
-                    canRemove={itemProps.canRemove}
-                    showControls={itemProps.showControls}
-                    customOnValueChanged={onEntryValuesChanged} />
-                }}
-              </Field>
-              <BaseErrorMesssage
-                name={itemId}
-                component="div"
-                className="text-sm text-red-600 pt-2" />
-            </div>
-          })}
-          {(itemProps.canAddItems && items.length < itemProps.maxItems) &&
-            <div className={`flex justify-center my-10`}>
-              {itemProps.addComponent
-                ? itemProps.addComponent({ onClick: () => arrayHelpers.push(itemProps.placeholder()) })
-                : <button
-                  type="button"
-                  onClick={() => arrayHelpers.push(itemProps.placeholder())}>
-                  +
-                </button>
-              }</div>}
-        </div>
-      }}
-    </FieldArray >
+      name={id}
+      component={fieldArrayComponent} />
     <ErrorMessage
       name={id}
       component="div"
