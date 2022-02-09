@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldArray as FieldArray$1, Field as Field$1, ErrorMessage as ErrorMessage$1, getIn, Form, Formik } from 'formik';
+import { FieldArray as FieldArray$1, Field as Field$1, getIn, ErrorMessage as ErrorMessage$1, Form, Formik } from 'formik';
 import { nanoid } from 'nanoid';
 
 function _extends() {
@@ -86,16 +86,15 @@ var FieldArray = (function (props) {
     onValuesChanged && onValuesChanged(_values);
   };
 
-  return /*#__PURE__*/React.createElement("div", {
-    className: "form-control mb-4 " + className
-  }, label && forceLabel && /*#__PURE__*/React.createElement("label", {
-    className: "label"
-  }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement(FieldArray$1, {
-    type: type,
-    name: id
-  }, function (arrayHelpers) {
+  var fieldArrayComponent = function fieldArrayComponent(arrayHelpers) {
     var swap = arrayHelpers.swap,
+        push = arrayHelpers.push,
         remove = arrayHelpers.remove;
+
+    var onAdd = function onAdd() {
+      push(itemProps.placeholder());
+    };
+
     return /*#__PURE__*/React.createElement("div", null, items && items.length > 0 && items.map(function (entry, index) {
       var itemId = id + "." + index;
       return /*#__PURE__*/React.createElement("div", {
@@ -177,15 +176,21 @@ var FieldArray = (function (props) {
     }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React.createElement("div", {
       className: "flex justify-center my-10"
     }, itemProps.addComponent ? itemProps.addComponent({
-      onClick: function onClick() {
-        return arrayHelpers.push(itemProps.placeholder());
-      }
+      onClick: onAdd
     }) : /*#__PURE__*/React.createElement("button", {
       type: "button",
-      onClick: function onClick() {
-        return arrayHelpers.push(itemProps.placeholder());
-      }
+      onClick: onAdd
     }, "+")));
+  };
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "form-control mb-4 " + className
+  }, label && forceLabel && /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement(FieldArray$1, {
+    type: type,
+    name: id,
+    component: fieldArrayComponent
   }), /*#__PURE__*/React.createElement(ErrorMessage, {
     name: id,
     component: "div",
