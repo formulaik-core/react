@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useFormikContext } from 'formik'
 import { Form } from 'formik'
 import FieldArray from './fieldArray'
 import Field from './field'
+
+
+const render = () => {
+  const { values } = useFormikContext()
+  useEffect(() => {
+    console.log('-------------------- values', values)
+  }, [values])
+  return generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged })
+}
 
 export const generate = (props) => {
   const { formItemsProvider } = props

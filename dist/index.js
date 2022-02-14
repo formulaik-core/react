@@ -1,8 +1,28 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var React = _interopDefault(require('react'));
+var React = require('react');
+var React__default = _interopDefault(React);
 var formik = require('formik');
 var nanoid = require('nanoid');
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
+  return Constructor;
+}
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -40,9 +60,37 @@ var componentInLibraries = (function (props) {
   return null;
 });
 
+var FieldArray = (function (props) {
+  var _props$item = props.item,
+      type = _props$item.type,
+      id = _props$item.id,
+      label = _props$item.label,
+      _props$item$forceLabe = _props$item.forceLabel,
+      forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
+      _props$item$className = _props$item.className,
+      className = _props$item$className === void 0 ? "" : _props$item$className;
+  return /*#__PURE__*/React__default.createElement("div", {
+    className: "form-control mb-4 " + className
+  }, label && forceLabel && /*#__PURE__*/React__default.createElement("label", {
+    className: "label"
+  }, /*#__PURE__*/React__default.createElement("span", null, label)), /*#__PURE__*/React__default.createElement(formik.FieldArray, {
+    type: type,
+    name: id,
+    component: function component(arrayHelpers) {
+      return render(_extends({}, props, {
+        arrayHelpers: arrayHelpers
+      }));
+    }
+  }), /*#__PURE__*/React__default.createElement(ErrorMessage, {
+    name: id,
+    component: "div",
+    className: "text-sm text-red-600 pt-2"
+  }));
+});
+
 var ErrorMessage = function ErrorMessage(_ref) {
   var name = _ref.name;
-  return /*#__PURE__*/React.createElement(formik.Field, {
+  return /*#__PURE__*/React__default.createElement(formik.Field, {
     name: name,
     render: function render(_ref2) {
       var form = _ref2.form;
@@ -53,20 +101,14 @@ var ErrorMessage = function ErrorMessage(_ref) {
   });
 };
 
-var FieldArray = (function (props) {
+var render = function render(props) {
   var values = props.values,
-      _props$item = props.item,
-      type = _props$item.type,
-      id = _props$item.id,
-      label = _props$item.label,
-      _props$item$forceLabe = _props$item.forceLabel,
-      forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
-      _props$item$className = _props$item.className,
-      className = _props$item$className === void 0 ? "" : _props$item$className,
-      itemProps = _props$item.props,
-      onValuesChanged = props.onValuesChanged,
-      setFieldValue = props.setFieldValue,
-      setFieldTouched = props.setFieldTouched;
+      _props$item2 = props.item,
+      id = _props$item2.id,
+      _props$item2$classNam = _props$item2.className,
+      className = _props$item2$classNam === void 0 ? "" : _props$item2$classNam,
+      itemProps = _props$item2.props,
+      onValuesChanged = props.onValuesChanged;
   var items = values[id] ? values[id] : [];
   var entryFormProvider = itemProps.entryFormProvider;
   var Component = componentInLibraries({
@@ -78,9 +120,17 @@ var FieldArray = (function (props) {
     return null;
   }
 
+  var arrayHelpers = props.arrayHelpers;
+  var swap = arrayHelpers.swap,
+      push = arrayHelpers.push,
+      remove = arrayHelpers.remove;
+
+  var onAdd = function onAdd() {
+    push(itemProps.placeholder());
+  };
+
   var customOnValueChanged = function customOnValueChanged(value) {
-    setFieldValue(id, value);
-    setFieldTouched(id, true, false);
+    var id = props.item.id;
 
     var _values = _extends({}, props.values);
 
@@ -88,123 +138,102 @@ var FieldArray = (function (props) {
     onValuesChanged && onValuesChanged(_values);
   };
 
-  var fieldArrayComponent = function fieldArrayComponent(arrayHelpers) {
-    var swap = arrayHelpers.swap,
-        push = arrayHelpers.push,
-        remove = arrayHelpers.remove;
+  return /*#__PURE__*/React__default.createElement("div", null, items && items.length > 0 && items.map(function (entry, index) {
+    var itemId = id + "." + index;
+    return /*#__PURE__*/React__default.createElement("div", {
+      key: index,
+      className: "form-control mb-4 " + className
+    }, /*#__PURE__*/React__default.createElement(formik.Field, {
+      type: entryFormProvider.type,
+      name: itemId
+    }, function (_ref3) {
 
-    var onAdd = function onAdd() {
-      push(itemProps.placeholder());
-    };
+      var onRemoveRequired = function onRemoveRequired() {
+        remove(index);
 
-    return /*#__PURE__*/React.createElement("div", null, items && items.length > 0 && items.map(function (entry, index) {
-      var itemId = id + "." + index;
-      return /*#__PURE__*/React.createElement("div", {
-        key: index,
-        className: "form-control mb-4 " + className
-      }, /*#__PURE__*/React.createElement(formik.Field, {
-        type: entryFormProvider.type,
-        name: itemId
-      }, function (_ref3) {
+        var _i = [].concat(items);
 
-        var onRemoveRequired = function onRemoveRequired() {
-          remove(index);
+        _i.splice(index, 1);
 
-          var _i = [].concat(items);
+        customOnValueChanged(_i);
+      };
 
-          _i.splice(index, 1);
+      var onMoveDownRequired = function onMoveDownRequired() {
+        if (items.length <= index) {
+          return;
+        }
 
-          customOnValueChanged(_i);
-        };
+        swap(index, index + 1);
 
-        var onMoveDownRequired = function onMoveDownRequired() {
-          if (items.length <= index) {
-            return;
-          }
+        var _i = [].concat(items);
 
-          swap(index, index + 1);
+        var object = _i[index];
+        var other = _i[index + 1];
+        _i[index] = other;
+        _i[index + 1] = object;
+        customOnValueChanged(_i);
+      };
 
-          var _i = [].concat(items);
+      var onMoveUpRequired = function onMoveUpRequired() {
+        if (index === 0) {
+          return;
+        }
 
-          var object = _i[index];
-          var other = _i[index + 1];
-          _i[index] = other;
-          _i[index + 1] = object;
-          customOnValueChanged(_i);
-        };
+        swap(index, index - 1);
 
-        var onMoveUpRequired = function onMoveUpRequired() {
-          if (index === 0) {
-            return;
-          }
+        var _i = [].concat(items);
 
-          swap(index, index - 1);
+        var object = _i[index];
+        var other = _i[index - 1];
+        _i[index] = other;
+        _i[index - 1] = object;
+        customOnValueChanged(_i);
+      };
 
-          var _i = [].concat(items);
+      var onEntryValuesChanged = function onEntryValuesChanged(value) {
+        var _i = [].concat(items);
 
-          var object = _i[index];
-          var other = _i[index - 1];
-          _i[index] = other;
-          _i[index - 1] = object;
-          customOnValueChanged(_i);
-        };
+        _i[index] = value;
+        customOnValueChanged(_i);
+      };
 
-        var onEntryValuesChanged = function onEntryValuesChanged(value) {
-          var _i = [].concat(items);
-
-          _i[index] = value;
-          customOnValueChanged(_i);
-        };
-
-        return /*#__PURE__*/React.createElement(Component, {
-          value: entry,
-          arrayHelpers: arrayHelpers,
-          onMoveDownRequired: onMoveDownRequired,
-          onMoveUpRequired: onMoveUpRequired,
-          onRemoveRequired: onRemoveRequired,
-          item: entryFormProvider,
-          index: index,
-          canMoveUp: itemProps.canMove && index > 0,
-          canMoveDown: itemProps.canMove && index < items.length - 1,
-          canRemove: itemProps.canRemove,
-          showControls: itemProps.showControls,
-          customOnValueChanged: onEntryValuesChanged
-        });
-      }), /*#__PURE__*/React.createElement(formik.ErrorMessage, {
-        name: itemId,
-        component: "div",
-        className: "text-sm text-red-600 pt-2"
+      return /*#__PURE__*/React__default.createElement(Component, _extends({}, props, {
+        value: entry,
+        arrayHelpers: arrayHelpers,
+        onMoveDownRequired: onMoveDownRequired,
+        onMoveUpRequired: onMoveUpRequired,
+        onRemoveRequired: onRemoveRequired,
+        item: entryFormProvider,
+        index: index,
+        canMoveUp: itemProps.canMove && index > 0,
+        canMoveDown: itemProps.canMove && index < items.length - 1,
+        canRemove: itemProps.canRemove,
+        showControls: itemProps.showControls
+      }, itemProps.entryFormProvider.props, {
+        customOnValueChanged: onEntryValuesChanged
       }));
-    }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React.createElement("div", {
-      className: "flex justify-center my-10"
-    }, itemProps.addComponent ? itemProps.addComponent({
-      onClick: onAdd
-    }) : /*#__PURE__*/React.createElement("button", {
-      type: "button",
-      onClick: onAdd
-    }, "+")));
-  };
-
-  return /*#__PURE__*/React.createElement("div", {
-    className: "form-control mb-4 " + className
-  }, label && forceLabel && /*#__PURE__*/React.createElement("label", {
-    className: "label"
-  }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement(formik.FieldArray, {
-    type: type,
-    name: id,
-    component: fieldArrayComponent
-  }), /*#__PURE__*/React.createElement(ErrorMessage, {
-    name: id,
-    component: "div",
-    className: "text-sm text-red-600 pt-2"
-  }));
-});
+    }), /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
+      name: itemId,
+      component: "div",
+      className: "text-sm text-red-600 pt-2"
+    }));
+  }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React__default.createElement("div", {
+    className: "flex justify-center my-10"
+  }, itemProps.addComponent ? itemProps.addComponent({
+    onClick: onAdd
+  }) : /*#__PURE__*/React__default.createElement("button", {
+    type: "button",
+    onClick: onAdd
+  }, "+")));
+};
 
 var Field = (function (props) {
   var _props$item = props.item,
       type = _props$item.type,
       id = _props$item.id,
       label = _props$item.label,
+      _props$item$isDependa = _props$item.isDependant,
+      isDependant = _props$item$isDependa === void 0 ? false : _props$item$isDependa,
       _props$item$forceLabe = _props$item.forceLabel,
       forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
       _props$item$className = _props$item.className,
@@ -221,11 +250,12 @@ var Field = (function (props) {
 
   var _id = id ? id : nanoid.nanoid();
 
-  return /*#__PURE__*/React.createElement("div", {
+  var Renderer = isDependant ? formik.Field : formik.FastField;
+  return /*#__PURE__*/React__default.createElement("div", {
     className: "form-control mb-4 " + className
-  }, label && forceLabel && /*#__PURE__*/React.createElement("label", {
+  }, label && forceLabel && /*#__PURE__*/React__default.createElement("label", {
     className: "label"
-  }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement(formik.Field, {
+  }, /*#__PURE__*/React__default.createElement("span", null, label)), /*#__PURE__*/React__default.createElement(Renderer, {
     type: type,
     name: _id
   }, function (_ref) {
@@ -233,6 +263,8 @@ var Field = (function (props) {
         form = _ref.form;
 
     var customOnValueChanged = function customOnValueChanged(value) {
+      console.log('customOnValueChanged', value);
+
       if (!props.item.id) {
         return;
       }
@@ -240,7 +272,7 @@ var Field = (function (props) {
       var id = props.item.id,
           setFieldValue = props.setFieldValue,
           setFieldTouched = props.setFieldTouched;
-      setFieldValue(id, value);
+      setFieldValue(id, value, false);
       setFieldTouched(id, true, false);
 
       var _values = _extends({}, props.values);
@@ -249,12 +281,13 @@ var Field = (function (props) {
       onValuesChanged && onValuesChanged(_values);
     };
 
-    return /*#__PURE__*/React.createElement(Component, _extends({}, props, {
+    return /*#__PURE__*/React__default.createElement(Component, _extends({}, props, {
+      value: props.values[id],
       field: field,
       form: form,
       customOnValueChanged: customOnValueChanged
     }));
-  }), /*#__PURE__*/React.createElement(formik.ErrorMessage, {
+  }), /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
     name: _id,
     component: "div",
     className: "text-sm text-red-600 pt-2"
@@ -264,7 +297,7 @@ var Field = (function (props) {
 var generate = function generate(props) {
   var formItemsProvider = props.formItemsProvider;
   var items = Array.isArray(formItemsProvider) ? formItemsProvider : formItemsProvider();
-  return /*#__PURE__*/React.createElement(formik.Form, {
+  return /*#__PURE__*/React__default.createElement(formik.Form, {
     className: "grid grid-flow-row"
   }, items.map(function (item) {
     var isMulti = item.isMulti;
@@ -285,7 +318,7 @@ var _generateItemsView = function _generateItemsView(props) {
   var _props$item = props.item,
       className = _props$item.className,
       items = _props$item.items;
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React__default.createElement("div", {
     className: className
   }, items.map(function (_item) {
     return _generateItemView(_extends({}, props, {
@@ -302,25 +335,78 @@ var _generateItemView = function _generateItemView(props) {
   }
 
   if (item.isList) {
-    return /*#__PURE__*/React.createElement(FieldArray, props);
+    return /*#__PURE__*/React__default.createElement(FieldArray, props);
   }
 
-  return /*#__PURE__*/React.createElement(Field, props);
+  return /*#__PURE__*/React__default.createElement(Field, props);
 };
+
+var FormulaikCache = /*#__PURE__*/function () {
+  function FormulaikCache(props) {
+    var _this = this;
+
+    this._data = {};
+
+    this.add = function (_ref) {
+      var search = _ref.search,
+          results = _ref.results,
+          key = _ref.key;
+
+      if (!_this.data[key]) {
+        _this.data[key] = {};
+      }
+
+      _this.data[key][search] = [].concat(results);
+      console.log('Formulaik cache > add >', key, search, results);
+    };
+
+    this.get = function (_ref2) {
+      var search = _ref2.search,
+          key = _ref2.key;
+
+      if (!_this.data[key]) {
+        console.log('Formulaik cache > get > key is not present', key);
+        return null;
+      }
+
+      console.log('Formulaik cache > get > key is present', key, 'Returning', _this.data[key][search]);
+      return _this.data[key][search];
+    };
+
+    this.clear = function () {
+      _this.data = {};
+    };
+  }
+
+  _createClass(FormulaikCache, [{
+    key: "data",
+    get: function get() {
+      return this._data;
+    },
+    set: function set(value) {
+      this._data = value;
+    }
+  }]);
+
+  return FormulaikCache;
+}();
 
 var index = (function (props) {
   var onSubmit = props.onSubmit,
       error = props.error,
-      onFormPropsChanged = props.onFormPropsChanged;
+      onFormPropsChanged = props.onFormPropsChanged,
+      _props$enableCache = props.enableCache,
+      enableCache = _props$enableCache === void 0 ? true : _props$enableCache;
   var initialValues = typeof props.initialValues !== 'function' ? props.initialValues : props.initialValues && props.initialValues();
   var validationSchema = typeof props.validationSchema !== 'function' ? props.validationSchema : props.validationSchema && props.validationSchema();
+  var cache = React.useRef(enableCache ? new FormulaikCache() : null);
 
   var onValuesChanged = function onValuesChanged(values) {
     props.onValuesChanged && props.onValuesChanged(values);
     console.log('onValuesChanged hook');
   };
 
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(formik.Formik, {
+  return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(formik.Formik, {
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: onSubmit
@@ -329,23 +415,24 @@ var index = (function (props) {
     return generate(_extends({}, formProps, props, {
       initialValues: initialValues,
       validationSchema: validationSchema,
-      onValuesChanged: onValuesChanged
+      onValuesChanged: onValuesChanged,
+      cache: cache.current
     }));
-  }), error && /*#__PURE__*/React.createElement("div", {
+  }), error && /*#__PURE__*/React__default.createElement("div", {
     className: "alert alert-error mb-4"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React__default.createElement("div", {
     className: "flex-1"
-  }, /*#__PURE__*/React.createElement("svg", {
+  }, /*#__PURE__*/React__default.createElement("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     fill: "none",
     viewBox: "0 0 24 24",
     className: "w-6 h-6 mx-2 stroke-current"
-  }, /*#__PURE__*/React.createElement("path", {
+  }, /*#__PURE__*/React__default.createElement("path", {
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
     "stroke-width": "2",
     d: "M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-  })), /*#__PURE__*/React.createElement("label", null, error.message))));
+  })), /*#__PURE__*/React__default.createElement("label", null, error.message))));
 });
 
 module.exports = index;
