@@ -14,8 +14,8 @@ const render = () => {
 }
 
 export const generate = (props) => {
-  const { formItemsProvider } = props
-  const items = Array.isArray(formItemsProvider) ? formItemsProvider : formItemsProvider()
+  const { inputs } = props
+  const items = Array.isArray(inputs) ? inputs : inputs()
   return <Form className="grid grid-flow-row">
     {
       items.map(item => {

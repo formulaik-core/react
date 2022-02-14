@@ -295,8 +295,8 @@ var Field = (function (props) {
 });
 
 var generate = function generate(props) {
-  var formItemsProvider = props.formItemsProvider;
-  var items = Array.isArray(formItemsProvider) ? formItemsProvider : formItemsProvider();
+  var inputs = props.inputs;
+  var items = Array.isArray(inputs) ? inputs : inputs();
   return /*#__PURE__*/React__default.createElement(formik.Form, {
     className: "grid grid-flow-row"
   }, items.map(function (item) {
@@ -352,25 +352,29 @@ var FormulaikCache = /*#__PURE__*/function () {
           results = _ref.results,
           key = _ref.key;
 
-      if (!_this.data[key]) {
-        _this.data[key] = {};
+      var _key = key.toLowerCase();
+
+      if (!_this.data[_key]) {
+        _this.data[_key] = {};
       }
 
-      _this.data[key][search] = [].concat(results);
-      console.log('Formulaik cache > add >', key, search, results);
+      _this.data[_key][search] = [].concat(results);
+      console.log('Formulaik cache > add >', _key, search, results);
     };
 
     this.get = function (_ref2) {
       var search = _ref2.search,
           key = _ref2.key;
 
-      if (!_this.data[key]) {
-        console.log('Formulaik cache > get > key is not present', key);
+      var _key = key.toLowerCase();
+
+      if (!_this.data[_key]) {
+        console.log('Formulaik cache > get > key is not present', _key);
         return null;
       }
 
-      console.log('Formulaik cache > get > key is present', key, 'Returning', _this.data[key][search]);
-      return _this.data[key][search];
+      console.log('Formulaik cache > get > key is present', _key, 'Returning', _this.data[_key][search]);
+      return _this.data[_key][search];
     };
 
     this.clear = function () {
