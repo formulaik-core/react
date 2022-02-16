@@ -65,7 +65,8 @@ var FieldArray = (function (props) {
       _props$item$forceLabe = _props$item.forceLabel,
       forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
       _props$item$className = _props$item.className,
-      className = _props$item$className === void 0 ? "" : _props$item$className;
+      className = _props$item$className === void 0 ? "" : _props$item$className,
+      hideErrors = props.hideErrors;
   return /*#__PURE__*/React.createElement("div", {
     className: "form-control mb-4 " + className
   }, label && forceLabel && /*#__PURE__*/React.createElement("label", {
@@ -78,11 +79,11 @@ var FieldArray = (function (props) {
         arrayHelpers: arrayHelpers
       }));
     }
-  }), /*#__PURE__*/React.createElement(ErrorMessage, {
+  }), !hideErrors ? /*#__PURE__*/React.createElement(ErrorMessage, {
     name: id,
     component: "div",
     className: "text-sm text-red-600 pt-2"
-  }));
+  }) : null);
 });
 
 var ErrorMessage = function ErrorMessage(_ref) {
@@ -105,7 +106,8 @@ var render = function render(props) {
       _props$item2$classNam = _props$item2.className,
       className = _props$item2$classNam === void 0 ? "" : _props$item2$classNam,
       itemProps = _props$item2.props,
-      onValuesChanged = props.onValuesChanged;
+      onValuesChanged = props.onValuesChanged,
+      hideErrors = props.hideErrors;
   var items = values[id] ? values[id] : [];
   var entryFormProvider = itemProps.entryFormProvider;
   var Component = componentInLibraries({
@@ -209,11 +211,11 @@ var render = function render(props) {
       }, itemProps.entryFormProvider.props, {
         customOnValueChanged: onEntryValuesChanged
       }));
-    }), /*#__PURE__*/React.createElement(ErrorMessage$1, {
+    }), !hideErrors ? /*#__PURE__*/React.createElement(ErrorMessage$1, {
       name: itemId,
       component: "div",
       className: "text-sm text-red-600 pt-2"
-    }));
+    }) : null);
   }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React.createElement("div", {
     className: "flex justify-center my-10"
   }, itemProps.addComponent ? itemProps.addComponent({
@@ -235,7 +237,8 @@ var Field = (function (props) {
       forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
       _props$item$className = _props$item.className,
       className = _props$item$className === void 0 ? "" : _props$item$className,
-      onValuesChanged = props.onValuesChanged;
+      onValuesChanged = props.onValuesChanged,
+      hideErrors = props.hideErrors;
   var Component = componentInLibraries({
     componentsLibraries: props.componentsLibraries,
     item: props.item
@@ -249,7 +252,7 @@ var Field = (function (props) {
 
   var Renderer = isDependant ? Field$1 : FastField;
   return /*#__PURE__*/React.createElement("div", {
-    className: "form-control mb-4 " + className
+    className: "mb-8 " + className
   }, label && forceLabel && /*#__PURE__*/React.createElement("label", {
     className: "label"
   }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement(Renderer, {
@@ -269,34 +272,39 @@ var Field = (function (props) {
       var id = props.item.id,
           setFieldValue = props.setFieldValue,
           setFieldTouched = props.setFieldTouched;
-      setFieldValue(id, value, false);
-      setFieldTouched(id, true, false);
 
       var _values = _extends({}, props.values);
 
       _values[id] = value;
       onValuesChanged && onValuesChanged(_values);
+      setFieldValue(id, value, true);
+      setFieldTouched(id, true, false);
     };
 
-    return /*#__PURE__*/React.createElement(Component, _extends({}, props, {
+    var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
+    var readOnly = props.readOnly || props.props && props.props.readOnly;
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Component, _extends({}, props, {
+      disabled: disabled,
+      readOnly: readOnly,
       value: props.values[id],
+      error: props.errors[id],
       field: field,
       form: form,
       customOnValueChanged: customOnValueChanged
-    }));
-  }), /*#__PURE__*/React.createElement(ErrorMessage$1, {
-    name: _id,
-    component: "div",
-    className: "text-sm text-red-600 pt-2"
+    })), !hideErrors && id ? /*#__PURE__*/React.createElement("div", {
+      className: " my-2 mb-4 px-2 rounded-b-lg"
+    }, /*#__PURE__*/React.createElement(ErrorMessage$1, {
+      name: _id,
+      component: "div",
+      className: "text-sm text-red-500 "
+    })) : null);
   }));
 });
 
 var generate = function generate(props) {
   var inputs = props.inputs;
   var items = Array.isArray(inputs) ? inputs : inputs();
-  return /*#__PURE__*/React.createElement(Form, {
-    className: "grid grid-flow-row"
-  }, items.map(function (item) {
+  return /*#__PURE__*/React.createElement(Form, null, items.map(function (item) {
     var isMulti = item.isMulti;
 
     if (isMulti) {
@@ -356,7 +364,6 @@ var FormulaikCache = /*#__PURE__*/function () {
       }
 
       _this.data[_key][search] = [].concat(results);
-      console.log('Formulaik cache > add >', _key, search, results);
     };
 
     this.get = function (_ref2) {
@@ -366,11 +373,9 @@ var FormulaikCache = /*#__PURE__*/function () {
       var _key = key.toLowerCase();
 
       if (!_this.data[_key]) {
-        console.log('Formulaik cache > get > key is not present', _key);
         return null;
       }
 
-      console.log('Formulaik cache > get > key is present', _key, 'Returning', _this.data[_key][search]);
       return _this.data[_key][search];
     };
 
@@ -396,20 +401,30 @@ var index = (function (props) {
   var onSubmit = props.onSubmit,
       error = props.error,
       onFormPropsChanged = props.onFormPropsChanged,
-      _props$enableCache = props.enableCache,
-      enableCache = _props$enableCache === void 0 ? true : _props$enableCache;
+      _props$disableCache = props.disableCache,
+      disableCache = _props$disableCache === void 0 ? false : _props$disableCache,
+      _props$hideErrors = props.hideErrors,
+      hideErrors = _props$hideErrors === void 0 ? false : _props$hideErrors,
+      _props$disabled = props.disabled,
+      disabled = _props$disabled === void 0 ? false : _props$disabled,
+      _props$readOnly = props.readOnly,
+      readOnly = _props$readOnly === void 0 ? false : _props$readOnly;
   var initialValues = typeof props.initialValues !== 'function' ? props.initialValues : props.initialValues && props.initialValues();
   var validationSchema = typeof props.validationSchema !== 'function' ? props.validationSchema : props.validationSchema && props.validationSchema();
-  var cache = useRef(enableCache ? new FormulaikCache() : null);
+  var cache = disableCache ? null : props.cache ? props.cache : useRef(new FormulaikCache()).current;
 
   var onValuesChanged = function onValuesChanged(values) {
     props.onValuesChanged && props.onValuesChanged(values);
     console.log('onValuesChanged hook');
   };
 
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Formik, {
+  return /*#__PURE__*/React.createElement("div", {
+    className: ""
+  }, /*#__PURE__*/React.createElement(Formik, {
     initialValues: initialValues,
     validationSchema: validationSchema,
+    validateOnBlur: true,
+    validateOnChange: true,
     onSubmit: onSubmit
   }, function (formProps) {
     onFormPropsChanged && onFormPropsChanged(formProps);
@@ -417,7 +432,11 @@ var index = (function (props) {
       initialValues: initialValues,
       validationSchema: validationSchema,
       onValuesChanged: onValuesChanged,
-      cache: cache.current
+      cache: cache,
+      disableCache: disableCache,
+      disabled: disabled,
+      readOnly: readOnly,
+      hideErrors: hideErrors
     }));
   }), error && /*#__PURE__*/React.createElement("div", {
     className: "alert alert-error mb-4"

@@ -5,6 +5,7 @@ import componentInLibraries from './componentInLibraries'
 export default (props) => {
   const {
     item: { type, id, label, forceLabel = false, className = "", },
+    hideErrors,
   } = props
 
   return <div className={`form-control mb-4 ${className}`}>
@@ -17,6 +18,7 @@ export default (props) => {
     <FieldArray
       type={type}
       name={id}
+      //validateOnChange
       component={(arrayHelpers) => render({ ...props, arrayHelpers })} />
     {/* <FieldArray
       type={type}
@@ -27,10 +29,11 @@ export default (props) => {
       name={id}>
       {(arrayHelpers) => render({ ...props, arrayHelpers })}
     </FieldArray> */}
-    <ErrorMessage
-      name={id}
-      component="div"
-      className="text-sm text-red-600 pt-2" />
+    {!hideErrors ?
+      <ErrorMessage
+        name={id}
+        component="div"
+        className="text-sm text-red-600 pt-2" /> : null}
   </div>
 }
 
@@ -54,7 +57,8 @@ const render = (props) => {
       className = "",
       props: itemProps,
     },
-    onValuesChanged } = props
+    onValuesChanged,
+    hideErrors } = props
 
   const items = values[id] ? values[id] : []
   //const [counter, setCounter] = useState(1)
@@ -73,13 +77,15 @@ const render = (props) => {
   }
 
   const customOnValueChanged = (value) => {
-    const { item: { id }, setFieldValue, setFieldTouched } = props
-    // setFieldValue(id, value)
-    // setFieldTouched(id, true, false)
-    //TODO:
+    const { item: { id }, setFieldValue, setFieldTouched, setValues } = props
+
     const _values = { ...props.values }
     _values[id] = value
     onValuesChanged && onValuesChanged(_values)
+    //setValues(_values)
+    //TODO:
+    // setFieldValue(id, value, true)
+    // setFieldTouched(id, true, false)
 
     //setItems(value)
   }
@@ -158,10 +164,12 @@ const render = (props) => {
               customOnValueChanged={onEntryValuesChanged} />
           }}
         </Field>
-        <BaseErrorMesssage
-          name={itemId}
-          component="div"
-          className="text-sm text-red-600 pt-2" />
+        {!hideErrors ?
+          <BaseErrorMesssage
+            name={itemId}
+            component="div"
+            className="text-sm text-red-600 pt-2" />
+          : null}
       </div>
     })}
     {(itemProps.canAddItems && items.length < itemProps.maxItems) &&

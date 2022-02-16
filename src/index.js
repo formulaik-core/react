@@ -8,30 +8,34 @@ export default (props) => {
     onSubmit,
     error,
     onFormPropsChanged,
-    enableCache = true
+    disableCache = false,
+    hideErrors = false,
+    disabled = false,
+    readOnly = false
   } = props
 
   const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
   const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
 
-  const cache = useRef(enableCache ? new FormulaikCache() : null)
+  const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
   const onValuesChanged = (values) => {
     props.onValuesChanged && props.onValuesChanged(values)
     console.log('onValuesChanged hook')
   }
 
-  return <div>
+  return <div className=''>
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
+      validateOnBlur
+      validateOnChange
       onSubmit={onSubmit}>
       {formProps => {
         onFormPropsChanged && onFormPropsChanged(formProps)
-        return generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged, cache: cache.current })
+        return generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged, cache, disableCache, disabled, readOnly, hideErrors })
       }
       }
     </Formik>
-
     {error &&
       <div className="alert alert-error mb-4">
         <div className="flex-1">

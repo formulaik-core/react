@@ -1,10 +1,11 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentInLibraries from './componentInLibraries'
 import { nanoid } from 'nanoid'
 
 export default (props) => {
-  const { item: { type, id, label, isDependant = false, forceLabel = false, className = "" }, onValuesChanged } = props
+  const { item: { type, id, label, isDependant = false, forceLabel = false, className = "" },
+    onValuesChanged, hideErrors } = props
   const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: props.item })
   if (!Component) {
     return null
@@ -13,7 +14,7 @@ export default (props) => {
   const _id = id ? id : nanoid()
   const Renderer = isDependant ? Field : FastField
 
-  return <div className={`form-control mb-4 ${className}`}>
+  return <div className={`mb-8 ${className}`}>
     {
       (label && forceLabel) &&
       <label className="label">
@@ -29,26 +30,42 @@ export default (props) => {
           if (!props.item.id) {
             return
           }
-          const { item: { id }, setFieldValue, setFieldTouched, setValues } = props
-          setFieldValue(id, value, false)
-          setFieldTouched(id, true, false)
+          const { item: { id }, setFieldValue, setFieldTouched } = props
+
           const _values = { ...props.values }
           _values[id] = value
-          //setValues(_values, false)
           onValuesChanged && onValuesChanged(_values)
+
+          setFieldValue(id, value, true)
+          setFieldTouched(id, true, false)
         }
 
-        return <Component
-          {...props}
-          value={props.values[id]}
-          field={field}
-          form={form}
-          customOnValueChanged={customOnValueChanged} />
+        const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
+        const readOnly = props.readOnly || (props.props && props.props.readOnly)
+        return <div>
+          <Component
+            {...props}
+            disabled={disabled}
+            readOnly={readOnly}
+            value={props.values[id]}
+            error={props.errors[id]}
+            field={field}
+            form={form}
+            customOnValueChanged={customOnValueChanged} />
+          {(!hideErrors && id)
+            ? <div className="
+            my-2
+            mb-4
+            px-2
+            rounded-b-lg">
+              <ErrorMessage
+                name={_id}
+                component="div"
+                className="text-sm text-red-500 " />
+            </div>
+            : null}
+        </div>
       }}
     </Renderer>
-    <ErrorMessage
-      name={_id}
-      component="div"
-      className="text-sm text-red-600 pt-2" />
   </div>
 }
