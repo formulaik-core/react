@@ -41,7 +41,7 @@ export default (props) => {
         }
 
         const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
-        const readOnly = props.readOnly || (props.props && props.props.readOnly)
+        const readOnly = props.readOnly || (props.params && props.params.readOnly)
         return <div>
           <Component
             {...props}

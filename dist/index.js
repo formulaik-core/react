@@ -108,7 +108,7 @@ var render = function render(props) {
       id = _props$item2.id,
       _props$item2$classNam = _props$item2.className,
       className = _props$item2$classNam === void 0 ? "" : _props$item2$classNam,
-      itemProps = _props$item2.props,
+      params = _props$item2.params,
       container = _props$item2.container,
       add = _props$item2.add,
       onValuesChanged = props.onValuesChanged,
@@ -116,7 +116,7 @@ var render = function render(props) {
   var items = values[id] ? values[id] : [];
   var Component = componentInLibraries({
     componentsLibraries: props.componentsLibraries,
-    item: itemProps
+    item: params
   });
 
   if (!Component) {
@@ -129,7 +129,7 @@ var render = function render(props) {
       remove = arrayHelpers.remove;
 
   var onAdd = function onAdd() {
-    push(itemProps.props.placeholder());
+    push(params.params.placeholder());
   };
 
   var onValueChanged = function onValueChanged(value) {
@@ -177,7 +177,7 @@ var render = function render(props) {
       key: index,
       className: "form-control mb-4 " + className
     }, /*#__PURE__*/React__default.createElement(formik.Field, {
-      type: itemProps.type,
+      type: params.type,
       name: itemId
     }, function (_ref5) {
 
@@ -231,7 +231,7 @@ var render = function render(props) {
       };
 
       var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
-      var readOnly = props.readOnly || props.props && props.props.readOnly;
+      var readOnly = props.readOnly || props.item && props.item.readOnly;
       return /*#__PURE__*/React__default.createElement(ContainerComponent, _extends({}, container, {
         arrayHelpers: arrayHelpers,
         onMoveDownRequired: onMoveDownRequired,
@@ -247,7 +247,7 @@ var render = function render(props) {
         disabled: disabled,
         readOnly: readOnly,
         value: entry
-      }, itemProps.props, {
+      }, params.params, {
         onValueChanged: onEntryValuesChanged
       })));
     }), !hideErrors ? /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
@@ -317,7 +317,7 @@ var Field = (function (props) {
     };
 
     var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
-    var readOnly = props.readOnly || props.props && props.props.readOnly;
+    var readOnly = props.readOnly || props.params && props.params.readOnly;
     return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(Component, _extends({}, props, {
       disabled: disabled,
       readOnly: readOnly,

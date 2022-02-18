@@ -55,7 +55,7 @@ const render = (props) => {
     item: {
       id,
       className = "",
-      props: itemProps,
+      params,
       container,
       add
     },
@@ -65,8 +65,7 @@ const render = (props) => {
   const items = values[id] ? values[id] : []
   //const [counter, setCounter] = useState(1)
 
-  const { entryFormProvider } = itemProps
-  const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: itemProps })
+  const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: params })
   if (!Component) {
     return null
   }
@@ -75,7 +74,7 @@ const render = (props) => {
   const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
 
   const onAdd = () => {
-    push(itemProps.props.placeholder())
+    push(params.params.placeholder())
   }
 
   const onValueChanged = (value) => {
@@ -129,7 +128,7 @@ const render = (props) => {
         </label>
       } */}
 
-        <Field type={itemProps.type} name={itemId} >
+        <Field type={params.type} name={itemId} >
           {({ field, form }) => {
             const onRemoveRequired = () => {
               remove(index)
@@ -176,7 +175,7 @@ const render = (props) => {
             }
 
             const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
-            const readOnly = props.readOnly || (props.props && props.props.readOnly)
+            const readOnly = props.readOnly || (props.item && props.item.readOnly)
 
             return <ContainerComponent
               {...container}
@@ -196,7 +195,7 @@ const render = (props) => {
                 disabled={disabled}
                 readOnly={readOnly}
                 value={entry}
-                {...itemProps.props}
+                {...params.params}
                 onValueChanged={onEntryValuesChanged} />
             </ContainerComponent>
           }}
