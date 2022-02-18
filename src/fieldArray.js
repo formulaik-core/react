@@ -56,6 +56,8 @@ const render = (props) => {
       id,
       className = "",
       props: itemProps,
+      container,
+      add
     },
     onValuesChanged,
     hideErrors } = props
@@ -64,7 +66,7 @@ const render = (props) => {
   //const [counter, setCounter] = useState(1)
 
   const { entryFormProvider } = itemProps
-  const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: entryFormProvider })
+  const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: itemProps })
   if (!Component) {
     return null
   }
@@ -73,7 +75,7 @@ const render = (props) => {
   const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
 
   const onAdd = () => {
-    push(itemProps.placeholder())
+    push(itemProps.props.placeholder())
   }
 
   const customOnValueChanged = (value) => {
@@ -90,6 +92,32 @@ const render = (props) => {
     //setItems(value)
   }
 
+  var ContainerComponent = componentInLibraries({
+    componentsLibraries: props.componentsLibraries,
+    item: container
+  })
+
+  if (!ContainerComponent) {
+    ContainerComponent = ({ children }) => <div>{children}</div>
+  }
+
+  var AddComponent = componentInLibraries({
+    componentsLibraries: props.componentsLibraries,
+    item: add
+  })
+
+  if (!AddComponent) {
+    AddComponent = ({ onClick, title }) => <div className={`flex justify-center my-10`}><button
+      type="button"
+      onClick={onClick}>
+      {title ? title : "Add"}
+    </button>
+    </div>
+  }
+
+
+
+
   return <div>
     {(items && items.length > 0) && items.map((entry, index) => {
       const itemId = `${id}.${index}`
@@ -101,7 +129,7 @@ const render = (props) => {
         </label>
       } */}
 
-        <Field type={entryFormProvider.type} name={itemId} >
+        <Field type={itemProps.type} name={itemId} >
           {({ field, form }) => {
             const onRemoveRequired = () => {
               remove(index)
@@ -147,21 +175,30 @@ const render = (props) => {
               customOnValueChanged(_i)
             }
 
-            return <Component
-              {...props}
-              value={entry}
+            const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
+            const readOnly = props.readOnly || (props.props && props.props.readOnly)
+
+            return <ContainerComponent
+              {...container}
+              // {...props}
               arrayHelpers={arrayHelpers}
               onMoveDownRequired={onMoveDownRequired}
               onMoveUpRequired={onMoveUpRequired}
               onRemoveRequired={onRemoveRequired}
-              item={entryFormProvider}
+              canMoveUp={props.item.canMove && (index > 0)}
+              canMoveDown={props.item.canMove && (index < (items.length - 1))}
+              canRemove={props.item.canRemove}
+              showControls={props.item.showControls}
               index={index}
-              canMoveUp={itemProps.canMove && (index > 0)}
-              canMoveDown={itemProps.canMove && (index < (items.length - 1))}
-              canRemove={itemProps.canRemove}
-              showControls={itemProps.showControls}
-              {...itemProps.entryFormProvider.props}
-              customOnValueChanged={onEntryValuesChanged} />
+              value={entry}>
+              <Component
+                {...props}
+                disabled={disabled}
+                readOnly={readOnly}
+                value={entry}
+                {...itemProps.props}
+                customOnValueChanged={onEntryValuesChanged} />
+            </ContainerComponent>
           }}
         </Field>
         {!hideErrors ?
@@ -172,15 +209,8 @@ const render = (props) => {
           : null}
       </div>
     })}
-    {(itemProps.canAddItems && items.length < itemProps.maxItems) &&
-      <div className={`flex justify-center my-10`}>
-        {itemProps.addComponent
-          ? itemProps.addComponent({ onClick: onAdd })
-          : <button
-            type="button"
-            onClick={onAdd}>
-            +
-          </button>
-        }</div>}
+    {(!props.disabled && props.item.canAddItems && items.length < props.item.maxItems) &&
+      <AddComponent onClick={onAdd} title={add.title} />
+    }
   </div>
 }
