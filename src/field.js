@@ -25,8 +25,8 @@ export default (props) => {
     <Renderer type={type} name={_id} >
       {({ field, form }) => {
 
-        const customOnValueChanged = (value) => {
-          console.log('customOnValueChanged', value)
+        const onValueChanged = (value) => {
+          console.log('onValueChanged', value)
           if (!props.item.id) {
             return
           }
@@ -51,7 +51,7 @@ export default (props) => {
             error={props.errors[id]}
             field={field}
             form={form}
-            customOnValueChanged={customOnValueChanged} />
+            onValueChanged={onValueChanged} />
           {(!hideErrors && id)
             ? <div className="
             my-2

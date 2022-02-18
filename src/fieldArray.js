@@ -78,7 +78,7 @@ const render = (props) => {
     push(itemProps.props.placeholder())
   }
 
-  const customOnValueChanged = (value) => {
+  const onValueChanged = (value) => {
     const { item: { id }, setFieldValue, setFieldTouched, setValues } = props
 
     const _values = { ...props.values }
@@ -135,7 +135,7 @@ const render = (props) => {
               remove(index)
               const _i = [...items]
               _i.splice(index, 1)
-              customOnValueChanged(_i)
+              onValueChanged(_i)
               //setCounter(counter + 1)
             }
 
@@ -150,7 +150,7 @@ const render = (props) => {
               const other = _i[index + 1]
               _i[index] = other
               _i[index + 1] = object
-              customOnValueChanged(_i)
+              onValueChanged(_i)
               //setCounter(counter + 1)
             }
 
@@ -165,14 +165,14 @@ const render = (props) => {
               const other = _i[index - 1]
               _i[index] = other
               _i[index - 1] = object
-              customOnValueChanged(_i)
+              onValueChanged(_i)
               //setCounter(counter + 1)
             }
 
             const onEntryValuesChanged = (value) => {
               const _i = [...items]
               _i[index] = value
-              customOnValueChanged(_i)
+              onValueChanged(_i)
             }
 
             const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
@@ -197,7 +197,7 @@ const render = (props) => {
                 readOnly={readOnly}
                 value={entry}
                 {...itemProps.props}
-                customOnValueChanged={onEntryValuesChanged} />
+                onValueChanged={onEntryValuesChanged} />
             </ContainerComponent>
           }}
         </Field>

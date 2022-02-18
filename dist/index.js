@@ -109,13 +109,14 @@ var render = function render(props) {
       _props$item2$classNam = _props$item2.className,
       className = _props$item2$classNam === void 0 ? "" : _props$item2$classNam,
       itemProps = _props$item2.props,
+      container = _props$item2.container,
+      add = _props$item2.add,
       onValuesChanged = props.onValuesChanged,
       hideErrors = props.hideErrors;
   var items = values[id] ? values[id] : [];
-  var entryFormProvider = itemProps.entryFormProvider;
   var Component = componentInLibraries({
     componentsLibraries: props.componentsLibraries,
-    item: entryFormProvider
+    item: itemProps
   });
 
   if (!Component) {
@@ -128,10 +129,10 @@ var render = function render(props) {
       remove = arrayHelpers.remove;
 
   var onAdd = function onAdd() {
-    push(itemProps.placeholder());
+    push(itemProps.props.placeholder());
   };
 
-  var customOnValueChanged = function customOnValueChanged(value) {
+  var onValueChanged = function onValueChanged(value) {
     var id = props.item.id;
 
     var _values = _extends({}, props.values);
@@ -140,15 +141,45 @@ var render = function render(props) {
     onValuesChanged && onValuesChanged(_values);
   };
 
+  var ContainerComponent = componentInLibraries({
+    componentsLibraries: props.componentsLibraries,
+    item: container
+  });
+
+  if (!ContainerComponent) {
+    ContainerComponent = function ContainerComponent(_ref3) {
+      var children = _ref3.children;
+      return /*#__PURE__*/React__default.createElement("div", null, children);
+    };
+  }
+
+  var AddComponent = componentInLibraries({
+    componentsLibraries: props.componentsLibraries,
+    item: add
+  });
+
+  if (!AddComponent) {
+    AddComponent = function AddComponent(_ref4) {
+      var onClick = _ref4.onClick,
+          title = _ref4.title;
+      return /*#__PURE__*/React__default.createElement("div", {
+        className: "flex justify-center my-10"
+      }, /*#__PURE__*/React__default.createElement("button", {
+        type: "button",
+        onClick: onClick
+      }, title ? title : "Add"));
+    };
+  }
+
   return /*#__PURE__*/React__default.createElement("div", null, items && items.length > 0 && items.map(function (entry, index) {
     var itemId = id + "." + index;
     return /*#__PURE__*/React__default.createElement("div", {
       key: index,
       className: "form-control mb-4 " + className
     }, /*#__PURE__*/React__default.createElement(formik.Field, {
-      type: entryFormProvider.type,
+      type: itemProps.type,
       name: itemId
-    }, function (_ref3) {
+    }, function (_ref5) {
 
       var onRemoveRequired = function onRemoveRequired() {
         remove(index);
@@ -157,7 +188,7 @@ var render = function render(props) {
 
         _i.splice(index, 1);
 
-        customOnValueChanged(_i);
+        onValueChanged(_i);
       };
 
       var onMoveDownRequired = function onMoveDownRequired() {
@@ -173,7 +204,7 @@ var render = function render(props) {
         var other = _i[index + 1];
         _i[index] = other;
         _i[index + 1] = object;
-        customOnValueChanged(_i);
+        onValueChanged(_i);
       };
 
       var onMoveUpRequired = function onMoveUpRequired() {
@@ -189,44 +220,45 @@ var render = function render(props) {
         var other = _i[index - 1];
         _i[index] = other;
         _i[index - 1] = object;
-        customOnValueChanged(_i);
+        onValueChanged(_i);
       };
 
       var onEntryValuesChanged = function onEntryValuesChanged(value) {
         var _i = [].concat(items);
 
         _i[index] = value;
-        customOnValueChanged(_i);
+        onValueChanged(_i);
       };
 
-      return /*#__PURE__*/React__default.createElement(Component, _extends({}, props, {
-        value: entry,
+      var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
+      var readOnly = props.readOnly || props.props && props.props.readOnly;
+      return /*#__PURE__*/React__default.createElement(ContainerComponent, _extends({}, container, {
         arrayHelpers: arrayHelpers,
         onMoveDownRequired: onMoveDownRequired,
         onMoveUpRequired: onMoveUpRequired,
         onRemoveRequired: onRemoveRequired,
-        item: entryFormProvider,
+        canMoveUp: props.item.canMove && index > 0,
+        canMoveDown: props.item.canMove && index < items.length - 1,
+        canRemove: props.item.canRemove,
+        showControls: props.item.showControls,
         index: index,
-        canMoveUp: itemProps.canMove && index > 0,
-        canMoveDown: itemProps.canMove && index < items.length - 1,
-        canRemove: itemProps.canRemove,
-        showControls: itemProps.showControls
-      }, itemProps.entryFormProvider.props, {
-        customOnValueChanged: onEntryValuesChanged
-      }));
+        value: entry
+      }), /*#__PURE__*/React__default.createElement(Component, _extends({}, props, {
+        disabled: disabled,
+        readOnly: readOnly,
+        value: entry
+      }, itemProps.props, {
+        onValueChanged: onEntryValuesChanged
+      })));
     }), !hideErrors ? /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
       name: itemId,
       component: "div",
       className: "text-sm text-red-600 pt-2"
     }) : null);
-  }), itemProps.canAddItems && items.length < itemProps.maxItems && /*#__PURE__*/React__default.createElement("div", {
-    className: "flex justify-center my-10"
-  }, itemProps.addComponent ? itemProps.addComponent({
-    onClick: onAdd
-  }) : /*#__PURE__*/React__default.createElement("button", {
-    type: "button",
-    onClick: onAdd
-  }, "+")));
+  }), !props.disabled && props.item.canAddItems && items.length < props.item.maxItems && /*#__PURE__*/React__default.createElement(AddComponent, {
+    onClick: onAdd,
+    title: add.title
+  }));
 };
 
 var Field = (function (props) {
@@ -265,8 +297,8 @@ var Field = (function (props) {
     var field = _ref.field,
         form = _ref.form;
 
-    var customOnValueChanged = function customOnValueChanged(value) {
-      console.log('customOnValueChanged', value);
+    var onValueChanged = function onValueChanged(value) {
+      console.log('onValueChanged', value);
 
       if (!props.item.id) {
         return;
@@ -293,7 +325,7 @@ var Field = (function (props) {
       error: props.errors[id],
       field: field,
       form: form,
-      customOnValueChanged: customOnValueChanged
+      onValueChanged: onValueChanged
     })), !hideErrors && id ? /*#__PURE__*/React__default.createElement("div", {
       className: " my-2 mb-4 px-2 rounded-b-lg"
     }, /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
