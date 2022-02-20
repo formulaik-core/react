@@ -50,7 +50,18 @@ var componentInLibraries = (function (props) {
       item = props.item;
 
   for (var i = 0; i < componentsLibraries.length; i++) {
-    var component = componentsLibraries[i](item);
+    var library = componentsLibraries[i];
+
+    if (!library) {
+      continue;
+    }
+
+    if (typeof library !== 'function') {
+      console.log('is not function', library);
+      continue;
+    }
+
+    var component = library(item);
 
     if (component) {
       return component;
@@ -161,21 +172,25 @@ var render = function render(props) {
   if (!AddComponent) {
     AddComponent = function AddComponent(_ref4) {
       var onClick = _ref4.onClick,
-          title = _ref4.title;
+          title = _ref4.title,
+          disabled = _ref4.disabled;
       return /*#__PURE__*/React__default.createElement("div", {
         className: "flex justify-center my-10"
       }, /*#__PURE__*/React__default.createElement("button", {
+        disabled: disabled,
         type: "button",
         onClick: onClick
       }, title ? title : "Add"));
     };
   }
 
-  return /*#__PURE__*/React__default.createElement("div", null, items && items.length > 0 && items.map(function (entry, index) {
+  return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement("div", {
+    className: "w-full overflow-x-scroll " + (props.item.isHorizontal ? 'flex gap-2 pb-8' : '')
+  }, items && items.length > 0 && items.map(function (entry, index) {
     var itemId = id + "." + index;
     return /*#__PURE__*/React__default.createElement("div", {
       key: index,
-      className: "form-control mb-4 " + className
+      className: "form-control " + (!props.item.isHorizontal ? 'mb-4' : '') + "  " + className
     }, /*#__PURE__*/React__default.createElement(formik.Field, {
       type: params.type,
       name: itemId
@@ -231,7 +246,7 @@ var render = function render(props) {
       };
 
       var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
-      var readOnly = props.readOnly || props.item && props.item.readOnly;
+      var readOnly = props.readOnly || props.props && props.props.readOnly;
       return /*#__PURE__*/React__default.createElement(ContainerComponent, _extends({}, container, {
         arrayHelpers: arrayHelpers,
         onMoveDownRequired: onMoveDownRequired,
@@ -255,9 +270,10 @@ var render = function render(props) {
       component: "div",
       className: "text-sm text-red-600 pt-2"
     }) : null);
-  }), !props.disabled && props.item.canAddItems && items.length < props.item.maxItems && /*#__PURE__*/React__default.createElement(AddComponent, {
+  })), !props.disabled && props.item.canAddItems && items.length < props.item.maxItems && /*#__PURE__*/React__default.createElement(AddComponent, {
     onClick: onAdd,
-    title: add.title
+    title: add.title,
+    disabled: items.length >= props.item.maxItems
   }));
 };
 
