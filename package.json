@@ -1,12 +1,12 @@
 {
-  "name": "@yelounak/formulaik",
-  "version": "1.0.484",
-  "description": "Core formulaik engine.",
+  "name": "@yelounak/formulaik-react",
+  "version": "1.0.485",
+  "description": "Core formulaik react engine.",
   "author": "yelounak",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yelounak/formulaik"
+    "url": "https://github.com/yelounak/formulaik-react"
   },
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
