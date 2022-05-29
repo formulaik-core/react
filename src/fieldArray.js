@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Field, ErrorMessage as BaseErrorMesssage, FieldArray, getIn } from 'formik'
 import componentInLibraries from './componentInLibraries'
 
@@ -52,19 +52,27 @@ const ErrorMessage = ({ name }) => (
 const render = (props) => {
   const {
     values,
+    initialValues,
     item: {
       id,
       className = "",
       params,
       container,
-      add
+      add,
+      preferInitialValues
     },
-    onValuesChanged,
+
     hideErrors } = props
 
-  const items = values[id] ? values[id] : []
-  //const [counter, setCounter] = useState(1)
+  // let items = values[id] ? values[id] : null
+  // if ((!items || !items.length || !items.filter(a => a).length) && (initialValues[id] && initialValues[id].length)) {
+  //   items = initialValues[id]
+  // }
 
+  let items = preferInitialValues ? initialValues[id] : (values[id] ? values[id] : null)
+
+  //const [counter, setCounter] = useState(1)
+  const _cachedValues = useRef(props.values)
   const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: params })
   if (!Component) {
     return null
@@ -74,7 +82,14 @@ const render = (props) => {
   const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
 
   const onAdd = () => {
-    push(params.params.placeholder())
+    onLayoutWillChange()
+    //console.log('%conAdd pressed', 'color: red;', params.params)
+    push(params.params.placeholder ? params.params.placeholder() : null)
+  }
+
+  const onLayoutWillChange = () => {
+    //const { item: { id }, setFieldValue, setFieldTouched, setValues } = props
+    //setValues(_cachedValues.current)
   }
 
   const onValueChanged = (value) => {
@@ -82,13 +97,12 @@ const render = (props) => {
 
     const _values = { ...props.values }
     _values[id] = value
-    onValuesChanged && onValuesChanged(_values)
+    _cachedValues.current = { ..._values }
+    props._onValueChanged && props._onValueChanged({ id, value })
     //setValues(_values)
     //TODO:
     // setFieldValue(id, value, true)
     // setFieldTouched(id, true, false)
-
-    //setItems(value)
   }
 
   var ContainerComponent = componentInLibraries({
@@ -113,9 +127,6 @@ const render = (props) => {
     </button>
     </div>
   }
-
-
-
 
   return <div>
     <div className={`w-full overflow-x-scroll ${props.item.isHorizontal ? 'flex gap-2 pb-8' : ''}`}>

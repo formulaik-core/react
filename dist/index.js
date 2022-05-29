@@ -122,9 +122,11 @@ var render = function render(props) {
       params = _props$item2.params,
       container = _props$item2.container,
       add = _props$item2.add,
-      onValuesChanged = props.onValuesChanged,
       hideErrors = props.hideErrors;
   var items = values[id] ? values[id] : [];
+
+  var _cachedValues = React.useRef(props.values);
+
   var Component = componentInLibraries({
     componentsLibraries: props.componentsLibraries,
     item: params
@@ -149,7 +151,11 @@ var render = function render(props) {
     var _values = _extends({}, props.values);
 
     _values[id] = value;
-    onValuesChanged && onValuesChanged(_values);
+    _cachedValues.current = _extends({}, _values);
+    props._onValueChanged && props._onValueChanged({
+      id: id,
+      value: value
+    });
   };
 
   var ContainerComponent = componentInLibraries({
@@ -288,7 +294,6 @@ var Field = (function (props) {
       forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
       _props$item$className = _props$item.className,
       className = _props$item$className === void 0 ? "" : _props$item$className,
-      onValuesChanged = props.onValuesChanged,
       hideErrors = props.hideErrors;
   var Component = componentInLibraries({
     componentsLibraries: props.componentsLibraries,
@@ -302,6 +307,9 @@ var Field = (function (props) {
   var _id = id ? id : nanoid.nanoid();
 
   var Renderer = isDependant ? formik.Field : formik.FastField;
+
+  var _props = _extends({}, props);
+
   return /*#__PURE__*/React__default.createElement("div", {
     className: "mb-8 " + className
   }, label && forceLabel && /*#__PURE__*/React__default.createElement("label", {
@@ -323,17 +331,16 @@ var Field = (function (props) {
       var id = props.item.id,
           setFieldValue = props.setFieldValue,
           setFieldTouched = props.setFieldTouched;
-
-      var _values = _extends({}, props.values);
-
-      _values[id] = value;
-      onValuesChanged && onValuesChanged(_values);
+      props._onValueChanged && props._onValueChanged({
+        id: id,
+        value: value
+      });
       setFieldValue(id, value, true);
       setFieldTouched(id, true, false);
     };
 
     var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
-    var readOnly = props.readOnly || props.params && props.params.readOnly;
+    var readOnly = props.readOnly || props.props && props.props.readOnly;
     return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(Component, _extends({}, props, {
       disabled: disabled,
       readOnly: readOnly,
@@ -462,11 +469,23 @@ var index = (function (props) {
       readOnly = _props$readOnly === void 0 ? false : _props$readOnly;
   var initialValues = typeof props.initialValues !== 'function' ? props.initialValues : props.initialValues && props.initialValues();
   var validationSchema = typeof props.validationSchema !== 'function' ? props.validationSchema : props.validationSchema && props.validationSchema();
+  var changedValues = React.useRef(initialValues);
   var cache = disableCache ? null : props.cache ? props.cache : React.useRef(new FormulaikCache()).current;
 
   var onValuesChanged = function onValuesChanged(values) {
+    changedValues.current = values;
     props.onValuesChanged && props.onValuesChanged(values);
     console.log('onValuesChanged hook');
+  };
+
+  var _onValueChanged = function _onValueChanged(_ref) {
+    var id = _ref.id,
+        value = _ref.value;
+
+    var values = _extends({}, changedValues.current);
+
+    values[id] = value;
+    onValuesChanged(values);
   };
 
   return /*#__PURE__*/React__default.createElement("div", {
@@ -483,6 +502,7 @@ var index = (function (props) {
       initialValues: initialValues,
       validationSchema: validationSchema,
       onValuesChanged: onValuesChanged,
+      _onValueChanged: _onValueChanged,
       cache: cache,
       disableCache: disableCache,
       disabled: disabled,

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, } from 'react'
 import { Formik } from 'formik'
 import { generate } from './content'
 import FormulaikCache from './cache'
@@ -17,10 +17,20 @@ export default (props) => {
   const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
   const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
 
+  const changedValues = useRef(initialValues)
   const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
   const onValuesChanged = (values) => {
+    changedValues.current = values
     props.onValuesChanged && props.onValuesChanged(values)
     console.log('onValuesChanged hook')
+  }
+
+  const _onValueChanged = ({ id, value }) => {
+    const values = {
+      ...changedValues.current,
+    }
+    values[id] = value
+    onValuesChanged(values)
   }
 
   return <div className=''>
@@ -32,9 +42,8 @@ export default (props) => {
       onSubmit={onSubmit}>
       {formProps => {
         onFormPropsChanged && onFormPropsChanged(formProps)
-        return generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged, cache, disableCache, disabled, readOnly, hideErrors })
-      }
-      }
+        return generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged, _onValueChanged, cache, disableCache, disabled, readOnly, hideErrors })
+      }}
     </Formik>
     {error &&
       <div className="alert alert-error mb-4">

@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid'
 
 export default (props) => {
   const { item: { type, id, label, isDependant = false, forceLabel = false, className = "" },
-    onValuesChanged, hideErrors } = props
+    onValueChanged, hideErrors } = props
   const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: props.item })
   if (!Component) {
     return null
@@ -13,7 +13,7 @@ export default (props) => {
 
   const _id = id ? id : nanoid()
   const Renderer = isDependant ? Field : FastField
-
+  const _props = { ...props }
   return <div className={`mb-8 ${className}`}>
     {
       (label && forceLabel) &&
@@ -32,16 +32,14 @@ export default (props) => {
           }
           const { item: { id }, setFieldValue, setFieldTouched } = props
 
-          const _values = { ...props.values }
-          _values[id] = value
-          onValuesChanged && onValuesChanged(_values)
+          props._onValueChanged && props._onValueChanged({ id, value })
 
           setFieldValue(id, value, true)
           setFieldTouched(id, true, false)
         }
 
         const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
-        const readOnly = props.readOnly || (props.params && props.params.readOnly)
+        const readOnly = props.readOnly || (props.props && props.props.readOnly)
         return <div>
           <Component
             {...props}
