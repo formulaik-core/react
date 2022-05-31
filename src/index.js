@@ -18,24 +18,24 @@ export default (props) => {
   const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
 
   const _form = useRef()
-  const changedValues = useRef(initialValues)
+  const valuesRef = useRef(initialValues ? initialValues : {})
   const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
 
   const onValuesChanged = (values) => {
-    changedValues.current = values
+    valuesRef.current = values
     props.onValuesChanged && props.onValuesChanged(values)
     console.log('onValuesChanged hook')
   }
 
   const onSubmit = async (values, actions) => {
     const { setValues } = actions
-    setValues(changedValues.current)
-    return props.onSubmit(changedValues.current, actions)
+    setValues(valuesRef.current)
+    return props.onSubmit(valuesRef.current, actions)
   }
 
   const _onValueChanged = ({ id, value }) => {
     const values = {
-      ...changedValues.current,
+      ...valuesRef.current,
     }
     values[id] = value
     onValuesChanged(values)
@@ -51,7 +51,21 @@ export default (props) => {
       onSubmit={onSubmit}>
       {formProps => {
         onFormPropsChanged && onFormPropsChanged(formProps)
-        return generate({ ...formProps, ...props, initialValues, validationSchema, onValuesChanged, _onValueChanged, values: changedValues.current, cache, disableCache, disabled, readOnly, hideErrors })
+        return generate({
+          ...formProps,
+          ...props,
+          initialValues,
+          validationSchema,
+          onValuesChanged,
+          _onValueChanged,
+          values: valuesRef.current,
+          valuesRef,
+          cache,
+          disableCache,
+          disabled,
+          readOnly,
+          hideErrors
+        })
       }}
     </Formik>
     {error &&

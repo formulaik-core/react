@@ -91,7 +91,7 @@ export default (props) => {
 
               const onRemoveRequired = () => {
                 remove(index)
-                const _i = [...props.valuesRef.current[id]]
+                const _i = [...items]
                 _i.splice(index, 1)
                 onValueChanged(_i)
               }
@@ -102,7 +102,7 @@ export default (props) => {
                 }
                 swap(index, index + 1)
 
-                const _i = [...props.valuesRef.current[id]]
+                const _i = [...items]
                 const object = _i[index]
                 const other = _i[index + 1]
                 _i[index] = other
@@ -116,7 +116,7 @@ export default (props) => {
                 }
                 swap(index, index - 1)
 
-                const _i = [...props.valuesRef.current[id]]
+                const _i = [...items]
                 const object = _i[index]
                 const other = _i[index - 1]
                 _i[index] = other
@@ -125,7 +125,7 @@ export default (props) => {
               }
 
               const onEntryValuesChanged = (value) => {
-                const _i = [...props.valuesRef.current[id]]
+                const _i = [...items]
                 _i[index] = value
                 onValueChanged(_i)
               }

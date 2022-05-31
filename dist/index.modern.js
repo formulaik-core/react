@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ErrorMessage as ErrorMessage$1, Field, FastField, getIn, FieldArray, Form, Formik } from 'formik';
 import { nanoid } from 'nanoid';
 
@@ -82,8 +82,7 @@ var Add = (function (_ref) {
 });
 
 var render = (function (props) {
-  var values = props.values,
-      initialValues = props.initialValues,
+  var initialValues = props.initialValues,
       _props$item = props.item,
       id = _props$item.id,
       _props$item$className = _props$item.className,
@@ -95,9 +94,8 @@ var render = (function (props) {
       _props$item$isDependa = _props$item.isDependant,
       isDependant = _props$item$isDependa === void 0 ? false : _props$item$isDependa,
       hideErrors = props.hideErrors;
-  var cachedValues = useRef(props.values);
 
-  var _items = preferInitialValues ? initialValues[id] : values[id] ? values[id] : null;
+  var _items = preferInitialValues ? initialValues[id] : props.valuesRef.current[id] ? props.valuesRef.current[id] : null;
 
   if (!_items) {
     _items = [];
@@ -154,10 +152,9 @@ var render = (function (props) {
   var onValueChanged = function onValueChanged(value) {
     var id = props.item.id;
 
-    var _values = _extends({}, props.values);
+    var _values = _extends({}, props.valuesRef.current);
 
     _values[id] = value;
-    cachedValues.current = _extends({}, _values);
     props._onValueChanged && props._onValueChanged({
       id: id,
       value: value
@@ -181,7 +178,7 @@ var render = (function (props) {
       var onRemoveRequired = function onRemoveRequired() {
         remove(index);
 
-        var _i = [].concat(items);
+        var _i = [].concat(props.valuesRef.current[id]);
 
         _i.splice(index, 1);
 
@@ -195,7 +192,7 @@ var render = (function (props) {
 
         swap(index, index + 1);
 
-        var _i = [].concat(items);
+        var _i = [].concat(props.valuesRef.current[id]);
 
         var object = _i[index];
         var other = _i[index + 1];
@@ -211,7 +208,7 @@ var render = (function (props) {
 
         swap(index, index - 1);
 
-        var _i = [].concat(items);
+        var _i = [].concat(props.valuesRef.current[id]);
 
         var object = _i[index];
         var other = _i[index - 1];
@@ -221,7 +218,7 @@ var render = (function (props) {
       };
 
       var onEntryValuesChanged = function onEntryValuesChanged(value) {
-        var _i = [].concat(items);
+        var _i = [].concat(props.valuesRef.current[id]);
 
         _i[index] = value;
         onValueChanged(_i);
@@ -487,11 +484,11 @@ var index = (function (props) {
 
   var _form = useRef();
 
-  var changedValues = useRef(initialValues);
+  var valuesRef = useRef(initialValues ? initialValues : {});
   var cache = disableCache ? null : props.cache ? props.cache : useRef(new FormulaikCache()).current;
 
   var onValuesChanged = function onValuesChanged(values) {
-    changedValues.current = values;
+    valuesRef.current = values;
     props.onValuesChanged && props.onValuesChanged(values);
     console.log('onValuesChanged hook');
   };
@@ -499,8 +496,8 @@ var index = (function (props) {
   var onSubmit = function onSubmit(values, actions) {
     try {
       var setValues = actions.setValues;
-      setValues(changedValues.current);
-      return Promise.resolve(props.onSubmit(changedValues.current, actions));
+      setValues(valuesRef.current);
+      return Promise.resolve(props.onSubmit(valuesRef.current, actions));
     } catch (e) {
       return Promise.reject(e);
     }
@@ -510,7 +507,7 @@ var index = (function (props) {
     var id = _ref.id,
         value = _ref.value;
 
-    var values = _extends({}, changedValues.current);
+    var values = _extends({}, valuesRef.current);
 
     values[id] = value;
     onValuesChanged(values);
@@ -532,7 +529,8 @@ var index = (function (props) {
       validationSchema: validationSchema,
       onValuesChanged: onValuesChanged,
       _onValueChanged: _onValueChanged,
-      values: changedValues.current,
+      values: valuesRef.current,
+      valuesRef: valuesRef,
       cache: cache,
       disableCache: disableCache,
       disabled: disabled,
