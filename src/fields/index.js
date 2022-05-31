@@ -1,9 +1,9 @@
 import React from 'react'
 import { Form } from 'formik'
-import FieldArray from './fieldArray'
-import Field from './field'
+import ArrayField from './array'
+import SingleField from './single'
 
-export const generate = (props) => {
+export default (props) => {
   const { inputs } = props
   const items = Array.isArray(inputs) ? inputs : inputs()
   return <Form>
@@ -11,31 +11,31 @@ export const generate = (props) => {
       items.map(item => {
         const { isMulti } = item
         if (isMulti) {
-          return _generateItemsView({ ...props, item })
+          return renderMultiItems({ ...props, item })
         }
 
-        return _generateItemView({ ...props, item, })
+        return renderItem({ ...props, item, })
       })
     }
   </Form>
 }
 
-const _generateItemsView = (props) => {
+const renderMultiItems = (props) => {
   const { item: { className, items } } = props
   return <div className={className}>
-    {items.map(_item => _generateItemView({ ...props, item: _item, }))}
+    {items.map(_item => renderItem({ ...props, item: _item, }))}
   </div>
 }
 
-const _generateItemView = (props) => {
+const renderItem = (props) => {
   const { item } = props
   if (item.hide) {
     return null
   }
 
   if (item.isList) {
-    return <FieldArray {...props} />
+    return <ArrayField {...props} />
   }
 
-  return <Field {...props} />
+  return <SingleField {...props} />
 }

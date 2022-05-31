@@ -1,25 +1,32 @@
 import React from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
-import componentInLibraries from './componentInLibraries'
+import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
 
 export default (props) => {
-  const { item: { type, id, label, isDependant = false, forceLabel = false, className = "" },
-    onValueChanged, hideErrors } = props
-  const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: props.item })
+  const { item: {
+    type,
+    id,
+    label,
+    isDependant = false,
+    forceLabel = false,
+    className = "" },
+    hideErrors } = props
+
+  const Component = componentResolver({ componentsLibraries: props.componentsLibraries, item: props.item })
   if (!Component) {
     return null
   }
 
   const _id = id ? id : nanoid()
   const Renderer = isDependant ? Field : FastField
-  const _props = { ...props }
-  return <div className={`mb-8 ${className}`}>
+
+  return <div className={`mb-6 ${className}`}>
     {
       (label && forceLabel) &&
-      <label className="label">
-        <span>{label}</span>
-      </label>
+      <div className="label mb-3">
+        <p>{label}</p>
+      </div>
     }
 
     <Renderer type={type} name={_id} >

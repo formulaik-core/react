@@ -1,55 +1,9 @@
 import React, { useState, useRef } from 'react'
-import { Field, ErrorMessage as BaseErrorMesssage, FieldArray, getIn } from 'formik'
-import componentInLibraries from './componentInLibraries'
+import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
+import componentResolver from '../../componentResolver'
+import Add from './chunks/add'
 
 export default (props) => {
-  const {
-    item: { type, id, label, forceLabel = false, className = "", },
-    hideErrors,
-  } = props
-
-  return <div className={`form-control mb-4 ${className}`}>
-    {
-      (label && forceLabel) &&
-      <label className="label">
-        <span>{label}</span>
-      </label>
-    }
-    <FieldArray
-      type={type}
-      name={id}
-      //validateOnChange
-      component={(arrayHelpers) => render({ ...props, arrayHelpers })} />
-    {/* <FieldArray
-      type={type}
-      name={id}
-      render={(arrayHelpers) => render({ ...props, arrayHelpers })} /> */}
-    {/* <FieldArray
-      type={type}
-      name={id}>
-      {(arrayHelpers) => render({ ...props, arrayHelpers })}
-    </FieldArray> */}
-    {!hideErrors ?
-      <ErrorMessage
-        name={id}
-        component="div"
-        className="text-sm text-red-600 pt-2" /> : null}
-  </div>
-}
-
-
-const ErrorMessage = ({ name }) => (
-  <Field
-    name={name}
-    render={({ form }) => {
-      const error = getIn(form.errors, name)
-      const touch = getIn(form.touched, name)
-      return touch && error ? error : null
-    }}
-  />
-)
-
-const render = (props) => {
   const {
     values,
     initialValues,
@@ -59,53 +13,33 @@ const render = (props) => {
       params,
       container,
       add,
-      preferInitialValues
+      preferInitialValues,
+      isDependant = false,
     },
 
     hideErrors } = props
+
+  //const [counter, setCounter] = useState(1)
+  const cachedValues = useRef(props.values)
 
   // let items = values[id] ? values[id] : null
   // if ((!items || !items.length || !items.filter(a => a).length) && (initialValues[id] && initialValues[id].length)) {
   //   items = initialValues[id]
   // }
 
-  let items = preferInitialValues ? initialValues[id] : (values[id] ? values[id] : null)
+  let _items = preferInitialValues ? initialValues[id] : (values[id] ? values[id] : null)
+  if (!_items) {
+    _items = []
+  }
 
-  //const [counter, setCounter] = useState(1)
-  const _cachedValues = useRef(props.values)
-  const Component = componentInLibraries({ componentsLibraries: props.componentsLibraries, item: params })
+  const [items, setItems] = useState(_items)
+
+  const Component = componentResolver({ componentsLibraries: props.componentsLibraries, item: params })
   if (!Component) {
     return null
   }
 
-  const { arrayHelpers } = props
-  const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
-
-  const onAdd = () => {
-    onLayoutWillChange()
-    //console.log('%conAdd pressed', 'color: red;', params.params)
-    push(params.params.placeholder ? params.params.placeholder() : null)
-  }
-
-  const onLayoutWillChange = () => {
-    //const { item: { id }, setFieldValue, setFieldTouched, setValues } = props
-    //setValues(_cachedValues.current)
-  }
-
-  const onValueChanged = (value) => {
-    const { item: { id }, setFieldValue, setFieldTouched, setValues } = props
-
-    const _values = { ...props.values }
-    _values[id] = value
-    _cachedValues.current = { ..._values }
-    props._onValueChanged && props._onValueChanged({ id, value })
-    //setValues(_values)
-    //TODO:
-    // setFieldValue(id, value, true)
-    // setFieldTouched(id, true, false)
-  }
-
-  var ContainerComponent = componentInLibraries({
+  var ContainerComponent = componentResolver({
     componentsLibraries: props.componentsLibraries,
     item: container
   })
@@ -114,25 +48,58 @@ const render = (props) => {
     ContainerComponent = ({ children }) => <div>{children}</div>
   }
 
-  var AddComponent = componentInLibraries({
+  var AddComponent = componentResolver({
     componentsLibraries: props.componentsLibraries,
     item: add
   })
 
   if (!AddComponent) {
-    AddComponent = ({ onClick, title, disabled }) => <div className={`flex justify-center my-10`}><button disabled={disabled}
-      type="button"
-      onClick={onClick}>
-      {title ? title : "Add"}
-    </button>
-    </div>
+    AddComponent = Add
   }
+
+  const { arrayHelpers } = props
+  const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
+
+  const onAdd = () => {
+    onLayoutWillChange()
+    const newItem = params.params.placeholder ? params.params.placeholder() : null
+    const _i = [...items, newItem]
+    onValueChanged(_i)
+    push(newItem)
+  }
+
+  const onLayoutWillChange = () => {
+    //const { item: { id }, setFieldValue, setFieldTouched, setValues } = props
+    //setValues(_cachedValues.current)
+  }
+
+  const onValueChanged = (value) => {
+    const { item: { id },
+      setFieldValue,
+      setFieldTouched,
+      setValues } = props
+
+    const _values = { ...props.values }
+    _values[id] = value
+    cachedValues.current = { ..._values }
+    props._onValueChanged && props._onValueChanged({ id, value })
+    setItems(value)
+    //setValues(_values, false)
+
+    //TODO:
+    //setFieldValue(id, value, true)
+    // setFieldTouched(id, true, false)
+  }
+
+  const Renderer = isDependant ? Field : FastField
 
   return <div>
     <div className={`w-full overflow-x-scroll ${props.item.isHorizontal ? 'flex gap-2 pb-8' : ''}`}>
       {(items && items.length > 0) && items.map((entry, index) => {
         const itemId = `${id}.${index}`
-        return <div key={index} className={`form-control ${!props.item.isHorizontal ? 'mb-4' : ''}  ${className}`}>
+        return <div
+          key={index}
+          className={`form-control ${!props.item.isHorizontal ? 'mb-4' : ''}  ${className}`}>
           {/* {
         (label && forceLabel) &&
         <label className="label">
@@ -140,8 +107,9 @@ const render = (props) => {
         </label>
       } */}
 
-          <Field type={params.type} name={itemId} >
+          <Renderer type={params.type} name={itemId} >
             {({ field, form }) => {
+
               const onRemoveRequired = () => {
                 remove(index)
                 const _i = [...items]
@@ -211,7 +179,7 @@ const render = (props) => {
                   onValueChanged={onEntryValuesChanged} />
               </ContainerComponent>
             }}
-          </Field>
+          </Renderer>
           {!hideErrors ?
             <BaseErrorMesssage
               name={itemId}
@@ -221,8 +189,11 @@ const render = (props) => {
         </div>
       })}
     </div>
-    {(!props.disabled && props.item.canAddItems && items.length < props.item.maxItems) &&
-      <AddComponent onClick={onAdd} title={add.title} disabled={items.length >= props.item.maxItems} />
+    {(!props.disabled && props.item.canAddItems && !items.length < props.item.maxItems) &&
+      <AddComponent
+        onClick={onAdd}
+        title={add.title}
+        disabled={items.length >= props.item.maxItems} />
     }
   </div>
 }
