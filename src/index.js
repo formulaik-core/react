@@ -13,7 +13,7 @@ export default (props) => {
     readOnly = false
   } = props
 
-  console.log("Solliciting formulaik", props)
+  //console.log("Solliciting formulaik", props)
   const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
   const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
 
@@ -24,7 +24,7 @@ export default (props) => {
   const onValuesChanged = (values) => {
     valuesRef.current = values
     props.onValuesChanged && props.onValuesChanged(values)
-    console.log('onValuesChanged hook')
+    //console.log('onValuesChanged hook')
   }
 
   const onSubmit = async (values, actions) => {

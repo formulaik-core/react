@@ -17,7 +17,6 @@ export default (props) => {
     },
     hideErrors } = props
 
-
   let _items = preferInitialValues ? initialValues[id] : (props.valuesRef.current[id] ? props.valuesRef.current[id] : null)
   if (!_items) {
     _items = []
@@ -133,6 +132,11 @@ export default (props) => {
               const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
               const readOnly = props.readOnly || (props.props && props.props.readOnly)
 
+              const adaptedProps = { ...props }
+              adaptedProps.item = {
+                ...adaptedProps.item,
+                params: adaptedProps.item.params.params
+              }
               return <ContainerComponent
                 {...container}
                 // {...props}
@@ -147,11 +151,11 @@ export default (props) => {
                 index={index}
                 value={entry}>
                 <Component
-                  {...props}
+                  {...adaptedProps}
                   disabled={disabled}
                   readOnly={readOnly}
                   value={entry}
-                  {...params.params}
+                  // {...params.params}
                   onValueChanged={onEntryValuesChanged} />
               </ContainerComponent>
             }}

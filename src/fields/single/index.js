@@ -33,7 +33,7 @@ export default (props) => {
       {({ field, form }) => {
 
         const onValueChanged = (value) => {
-          console.log('onValueChanged', value)
+          //console.log('onValueChanged', value)
           if (!props.item.id) {
             return
           }

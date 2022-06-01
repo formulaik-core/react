@@ -226,6 +226,12 @@ var render = (function (props) {
 
       var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
       var readOnly = props.readOnly || props.props && props.props.readOnly;
+
+      var adaptedProps = _extends({}, props);
+
+      adaptedProps.item = _extends({}, adaptedProps.item, {
+        params: adaptedProps.item.params.params
+      });
       return /*#__PURE__*/React.createElement(ContainerComponent, _extends({}, container, {
         arrayHelpers: arrayHelpers,
         onMoveDownRequired: onMoveDownRequired,
@@ -237,11 +243,10 @@ var render = (function (props) {
         showControls: props.item.showControls,
         index: index,
         value: entry
-      }), /*#__PURE__*/React.createElement(Component, _extends({}, props, {
+      }), /*#__PURE__*/React.createElement(Component, _extends({}, adaptedProps, {
         disabled: disabled,
         readOnly: readOnly,
-        value: entry
-      }, params.params, {
+        value: entry,
         onValueChanged: onEntryValuesChanged
       })));
     }), !hideErrors ? /*#__PURE__*/React.createElement(ErrorMessage$1, {
@@ -334,8 +339,6 @@ var SingleField = (function (props) {
         form = _ref.form;
 
     var onValueChanged = function onValueChanged(value) {
-      console.log('onValueChanged', value);
-
       if (!props.item.id) {
         return;
       }
@@ -478,7 +481,6 @@ var index = (function (props) {
       disabled = _props$disabled === void 0 ? false : _props$disabled,
       _props$readOnly = props.readOnly,
       readOnly = _props$readOnly === void 0 ? false : _props$readOnly;
-  console.log("Solliciting formulaik", props);
   var initialValues = typeof props.initialValues !== 'function' ? props.initialValues : props.initialValues && props.initialValues();
   var validationSchema = typeof props.validationSchema !== 'function' ? props.validationSchema : props.validationSchema && props.validationSchema();
 
@@ -490,7 +492,6 @@ var index = (function (props) {
   var onValuesChanged = function onValuesChanged(values) {
     valuesRef.current = values;
     props.onValuesChanged && props.onValuesChanged(values);
-    console.log('onValuesChanged hook');
   };
 
   var onSubmit = function onSubmit(values, actions) {
