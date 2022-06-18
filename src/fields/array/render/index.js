@@ -24,12 +24,13 @@ export default (props) => {
 
   const [items, setItems] = useState(_items)
 
-  const Component = componentResolver({ componentsLibraries: props.componentsLibraries, item: params })
+  const Component = componentResolver({ ...props, componentsLibraries: props.componentsLibraries, item: params })
   if (!Component) {
     return null
   }
 
   var ContainerComponent = componentResolver({
+    ...props,
     componentsLibraries: props.componentsLibraries,
     item: container
   })
@@ -39,6 +40,7 @@ export default (props) => {
   }
 
   var AddComponent = componentResolver({
+    ...props,
     componentsLibraries: props.componentsLibraries,
     item: add
   })

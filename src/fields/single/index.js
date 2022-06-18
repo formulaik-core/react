@@ -1,19 +1,18 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
+import LabelRenderer from '../chunks/label'
 
 export default (props) => {
   const { item: {
     type,
     id,
-    label,
     isDependant = false,
-    forceLabel = false,
     className = "" },
     hideErrors } = props
 
-  const Component = componentResolver({ componentsLibraries: props.componentsLibraries, item: props.item })
+  const Component = componentResolver({ ...props, componentsLibraries: props.componentsLibraries, item: props.item })
   if (!Component) {
     return null
   }
@@ -22,13 +21,7 @@ export default (props) => {
   const Renderer = isDependant ? Field : FastField
 
   return <div className={`mb-6 ${className}`}>
-    {
-      (label && forceLabel) &&
-      <div className="label mb-3">
-        <p>{label}</p>
-      </div>
-    }
-
+    <LabelRenderer {...props} />
     <Renderer type={type} name={_id} >
       {({ field, form }) => {
 
@@ -66,7 +59,7 @@ export default (props) => {
               <ErrorMessage
                 name={_id}
                 component="div"
-                className="text-sm text-red-500 " />
+                className="text-sm text-pink-600" />
             </div>
             : null}
         </div>

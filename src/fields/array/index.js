@@ -2,26 +2,20 @@ import React from 'react'
 import { FieldArray, } from 'formik'
 import render from './render'
 import ErrorMessage from './errorMessage'
+import LabelRenderer from '../chunks/label'
 
 export default (props) => {
   const {
     item: {
       type,
       id,
-      label,
-      forceLabel = false,
       className = "",
     },
     hideErrors,
   } = props
 
   return <div className={`${className}`}>
-    {
-      (label && forceLabel) &&
-      <div className="label mb-3">
-        <p>{label}</p>
-      </div>
-    }
+    <LabelRenderer {...props} />
     <FieldArray
       type={type}
       name={id}
@@ -40,6 +34,6 @@ export default (props) => {
       <ErrorMessage
         name={id}
         component="div"
-        className="text-sm text-red-600 pt-2" /> : null}
+        className="text-sm text-pink-600 pt-2" /> : null}
   </div>
 }

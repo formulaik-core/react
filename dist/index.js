@@ -47,7 +47,18 @@ var componentResolver = (function (props) {
       componentsLibraries = _props$componentsLibr === void 0 ? [function () {
     return null;
   }] : _props$componentsLibr,
-      item = props.item;
+      item = props.item,
+      cache = props.cache;
+
+  if (cache) {
+    var _cached = cache.getComponent({
+      key: item.type
+    });
+
+    if (_cached) {
+      return _cached;
+    }
+  }
 
   for (var i = 0; i < componentsLibraries.length; i++) {
     var library = componentsLibraries[i];
@@ -64,6 +75,13 @@ var componentResolver = (function (props) {
     var component = library(item);
 
     if (component) {
+      if (cache) {
+        cache.addComponent({
+          component: component,
+          key: item.type
+        });
+      }
+
       return component;
     }
   }
@@ -108,19 +126,19 @@ var render = (function (props) {
       items = _useState[0],
       setItems = _useState[1];
 
-  var Component = componentResolver({
+  var Component = componentResolver(_extends({}, props, {
     componentsLibraries: props.componentsLibraries,
     item: params
-  });
+  }));
 
   if (!Component) {
     return null;
   }
 
-  var ContainerComponent = componentResolver({
+  var ContainerComponent = componentResolver(_extends({}, props, {
     componentsLibraries: props.componentsLibraries,
     item: container
-  });
+  }));
 
   if (!ContainerComponent) {
     ContainerComponent = function ContainerComponent(_ref) {
@@ -129,10 +147,10 @@ var render = (function (props) {
     };
   }
 
-  var AddComponent = componentResolver({
+  var AddComponent = componentResolver(_extends({}, props, {
     componentsLibraries: props.componentsLibraries,
     item: add
-  });
+  }));
 
   if (!AddComponent) {
     AddComponent = Add;
@@ -277,21 +295,30 @@ var ErrorMessage = (function (_ref) {
   });
 });
 
+var LabelRenderer = (function (props) {
+  var _props$item = props.item,
+      label = _props$item.label,
+      hideLabel = _props$item.hideLabel;
+
+  if (hideLabel || !label) {
+    return null;
+  }
+
+  return /*#__PURE__*/React__default.createElement("div", {
+    className: "mb-2"
+  }, /*#__PURE__*/React__default.createElement("h5", null, label));
+});
+
 var ArrayField = (function (props) {
   var _props$item = props.item,
       type = _props$item.type,
       id = _props$item.id,
-      label = _props$item.label,
-      _props$item$forceLabe = _props$item.forceLabel,
-      forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
       _props$item$className = _props$item.className,
       className = _props$item$className === void 0 ? "" : _props$item$className,
       hideErrors = props.hideErrors;
   return /*#__PURE__*/React__default.createElement("div", {
     className: "" + className
-  }, label && forceLabel && /*#__PURE__*/React__default.createElement("div", {
-    className: "label mb-3"
-  }, /*#__PURE__*/React__default.createElement("p", null, label)), /*#__PURE__*/React__default.createElement(formik.FieldArray, {
+  }, /*#__PURE__*/React__default.createElement(LabelRenderer, props), /*#__PURE__*/React__default.createElement(formik.FieldArray, {
     type: type,
     name: id,
     component: function component(arrayHelpers) {
@@ -302,7 +329,7 @@ var ArrayField = (function (props) {
   }), !hideErrors ? /*#__PURE__*/React__default.createElement(ErrorMessage, {
     name: id,
     component: "div",
-    className: "text-sm text-red-600 pt-2"
+    className: "text-sm text-pink-600 pt-2"
   }) : null);
 });
 
@@ -310,18 +337,15 @@ var SingleField = (function (props) {
   var _props$item = props.item,
       type = _props$item.type,
       id = _props$item.id,
-      label = _props$item.label,
       _props$item$isDependa = _props$item.isDependant,
       isDependant = _props$item$isDependa === void 0 ? false : _props$item$isDependa,
-      _props$item$forceLabe = _props$item.forceLabel,
-      forceLabel = _props$item$forceLabe === void 0 ? false : _props$item$forceLabe,
       _props$item$className = _props$item.className,
       className = _props$item$className === void 0 ? "" : _props$item$className,
       hideErrors = props.hideErrors;
-  var Component = componentResolver({
+  var Component = componentResolver(_extends({}, props, {
     componentsLibraries: props.componentsLibraries,
     item: props.item
-  });
+  }));
 
   if (!Component) {
     return null;
@@ -332,9 +356,7 @@ var SingleField = (function (props) {
   var Renderer = isDependant ? formik.Field : formik.FastField;
   return /*#__PURE__*/React__default.createElement("div", {
     className: "mb-6 " + className
-  }, label && forceLabel && /*#__PURE__*/React__default.createElement("div", {
-    className: "label mb-3"
-  }, /*#__PURE__*/React__default.createElement("p", null, label)), /*#__PURE__*/React__default.createElement(Renderer, {
+  }, /*#__PURE__*/React__default.createElement(LabelRenderer, props), /*#__PURE__*/React__default.createElement(Renderer, {
     type: type,
     name: _id
   }, function (_ref) {
@@ -372,7 +394,7 @@ var SingleField = (function (props) {
     }, /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
       name: _id,
       component: "div",
-      className: "text-sm text-red-500 "
+      className: "text-sm text-pink-600"
     })) : null);
   }));
 });
@@ -427,6 +449,7 @@ var FormulaikCache = /*#__PURE__*/function () {
     var _this = this;
 
     this._data = {};
+    this._cdata = {};
 
     this.add = function (_ref) {
       var search = _ref.search,
@@ -458,6 +481,27 @@ var FormulaikCache = /*#__PURE__*/function () {
     this.clear = function () {
       _this.data = {};
     };
+
+    this.addComponent = function (_ref3) {
+      var component = _ref3.component,
+          key = _ref3.key;
+
+      var _key = key.toLowerCase();
+
+      _this.cdata[_key] = component;
+    };
+
+    this.getComponent = function (_ref4) {
+      var key = _ref4.key;
+
+      var _key = key.toLowerCase();
+
+      if (!_this.cdata[_key]) {
+        return null;
+      }
+
+      return _this.cdata[_key];
+    };
   }
 
   _createClass(FormulaikCache, [{
@@ -467,6 +511,14 @@ var FormulaikCache = /*#__PURE__*/function () {
     },
     set: function set(value) {
       this._data = value;
+    }
+  }, {
+    key: "cdata",
+    get: function get() {
+      return this._cdata;
+    },
+    set: function set(value) {
+      this._cdata = value;
     }
   }]);
 
