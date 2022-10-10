@@ -22,7 +22,7 @@ export default (props) => {
 
 const renderMultiItems = (props) => {
   const { item: { className, items } } = props
-  return <div className={className}>
+  return <div className={`#TODO -mb-2 ${className}`}>
     {items.map(_item => renderItem({ ...props, item: _item, }))}
   </div>
 }

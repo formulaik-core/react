@@ -1,6 +1,6 @@
-import React, { useRef, } from 'react'
+import React, { useRef, useState } from 'react'
 import { Formik } from 'formik'
-import generate from './fields'
+import fields from './fields'
 import FormulaikCache from './cache'
 
 export default (props) => {
@@ -10,7 +10,8 @@ export default (props) => {
     disableCache = false,
     hideErrors = false,
     disabled = false,
-    readOnly = false
+    readOnly = false,
+    children
   } = props
 
   //console.log("Solliciting formulaik", props)
@@ -20,6 +21,16 @@ export default (props) => {
   const _form = useRef()
   const valuesRef = useRef(initialValues ? initialValues : {})
   const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
+
+  const containersProps = useRef({})
+
+  const onContainerPropsChanged = ({ id, props: containerProps }) => {
+    const data = {
+      ...containersProps.current,
+    }
+    data[id] = containerProps
+    containersProps.current = data
+  }
 
   const onValuesChanged = (values) => {
     valuesRef.current = values
@@ -51,13 +62,15 @@ export default (props) => {
       onSubmit={onSubmit}>
       {formProps => {
         onFormPropsChanged && onFormPropsChanged(formProps)
-        return generate({
+        return fields({
           ...formProps,
           ...props,
           initialValues,
           validationSchema,
           onValuesChanged,
           _onValueChanged,
+          containersProps: containersProps.current,
+          onContainerPropsChanged,
           values: valuesRef.current,
           valuesRef,
           cache,
@@ -68,6 +81,7 @@ export default (props) => {
         })
       }}
     </Formik>
+    {children}
     {error &&
       <div className="mt-6 text-pink-600 text-center">
         <label>{error.message}</label>

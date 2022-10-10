@@ -15,6 +15,7 @@ export default (props) => {
       preferInitialValues,
       isDependant = false,
     },
+    containersProps,
     hideErrors } = props
 
   let _items = preferInitialValues ? initialValues[id] : (props.valuesRef.current[id] ? props.valuesRef.current[id] : null)
@@ -29,7 +30,7 @@ export default (props) => {
     return null
   }
 
-  var ContainerComponent = componentResolver({
+  let ContainerComponent = componentResolver({
     ...props,
     componentsLibraries: props.componentsLibraries,
     item: container
@@ -39,7 +40,7 @@ export default (props) => {
     ContainerComponent = ({ children }) => <div>{children}</div>
   }
 
-  var AddComponent = componentResolver({
+  let AddComponent = componentResolver({
     ...props,
     componentsLibraries: props.componentsLibraries,
     item: add
@@ -52,8 +53,8 @@ export default (props) => {
   const { arrayHelpers } = props
   const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
 
-  const onAdd = () => {
-    const newItem = params.params.placeholder ? params.params.placeholder() : null
+  const onAdd = async () => {
+    const newItem = params.params.placeholder ? await params.params.placeholder() : null
     const _i = [...items, newItem]
     onValueChanged(_i)
     push(newItem)
@@ -137,11 +138,17 @@ export default (props) => {
               const adaptedProps = { ...props }
               adaptedProps.item = {
                 ...adaptedProps.item,
-                params: adaptedProps.item.params.params
+                params: adaptedProps.item.params
               }
+
+              const onContainerPropsChanged = (containerProps) => {
+                props.onContainerPropsChanged({ id: itemId, props: containerProps })
+              }
+
               return <ContainerComponent
                 {...container}
                 // {...props}
+                {...props.item}
                 arrayHelpers={arrayHelpers}
                 onMoveDownRequired={onMoveDownRequired}
                 onMoveUpRequired={onMoveUpRequired}
@@ -151,13 +158,15 @@ export default (props) => {
                 canRemove={props.item.canRemove}
                 showControls={props.item.showControls}
                 index={index}
-                value={entry}>
+                value={entry}
+                containerProps={containersProps[itemId]}
+                onContainerPropsChanged={onContainerPropsChanged}>
                 <Component
                   {...adaptedProps}
                   disabled={disabled}
                   readOnly={readOnly}
                   value={entry}
-                  // {...params.params}
+                  // {...params}
                   onValueChanged={onEntryValuesChanged} />
               </ContainerComponent>
             }}

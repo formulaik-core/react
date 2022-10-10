@@ -4,6 +4,7 @@ var React = require('react');
 var React__default = _interopDefault(React);
 var formik = require('formik');
 var nanoid = require('nanoid');
+var Portal = _interopDefault(require('@mui/material/Portal'));
 
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
@@ -114,6 +115,7 @@ var render = (function (props) {
       preferInitialValues = _props$item.preferInitialValues,
       _props$item$isDependa = _props$item.isDependant,
       isDependant = _props$item$isDependa === void 0 ? false : _props$item$isDependa,
+      containersProps = props.containersProps,
       hideErrors = props.hideErrors;
 
   var _items = preferInitialValues ? initialValues[id] : props.valuesRef.current[id] ? props.valuesRef.current[id] : null;
@@ -162,12 +164,19 @@ var render = (function (props) {
       remove = arrayHelpers.remove;
 
   var onAdd = function onAdd() {
-    var newItem = params.params.placeholder ? params.params.placeholder() : null;
+    try {
+      var _temp2 = function _temp2(newItem) {
+        var _i = [].concat(items, [newItem]);
 
-    var _i = [].concat(items, [newItem]);
+        onValueChanged(_i);
+        push(newItem);
+      };
 
-    onValueChanged(_i);
-    push(newItem);
+      var _params$params$placeh2 = params.params.placeholder;
+      return Promise.resolve(_params$params$placeh2 ? Promise.resolve(params.params.placeholder()).then(_temp2) : _temp2(null));
+    } catch (e) {
+      return Promise.reject(e);
+    }
   };
 
   var onValueChanged = function onValueChanged(value) {
@@ -251,9 +260,17 @@ var render = (function (props) {
       var adaptedProps = _extends({}, props);
 
       adaptedProps.item = _extends({}, adaptedProps.item, {
-        params: adaptedProps.item.params.params
+        params: adaptedProps.item.params
       });
-      return /*#__PURE__*/React__default.createElement(ContainerComponent, _extends({}, container, {
+
+      var onContainerPropsChanged = function onContainerPropsChanged(containerProps) {
+        props.onContainerPropsChanged({
+          id: itemId,
+          props: containerProps
+        });
+      };
+
+      return /*#__PURE__*/React__default.createElement(ContainerComponent, _extends({}, container, props.item, {
         arrayHelpers: arrayHelpers,
         onMoveDownRequired: onMoveDownRequired,
         onMoveUpRequired: onMoveUpRequired,
@@ -263,7 +280,9 @@ var render = (function (props) {
         canRemove: props.item.canRemove,
         showControls: props.item.showControls,
         index: index,
-        value: entry
+        value: entry,
+        containerProps: containersProps[itemId],
+        onContainerPropsChanged: onContainerPropsChanged
       }), /*#__PURE__*/React__default.createElement(Component, _extends({}, adaptedProps, {
         disabled: disabled,
         readOnly: readOnly,
@@ -306,7 +325,9 @@ var LabelRenderer = (function (props) {
 
   return /*#__PURE__*/React__default.createElement("div", {
     className: "mb-2"
-  }, /*#__PURE__*/React__default.createElement("h5", null, label));
+  }, /*#__PURE__*/React__default.createElement("p", {
+    className: ""
+  }, label));
 });
 
 var ArrayField = (function (props) {
@@ -339,6 +360,7 @@ var SingleField = (function (props) {
       id = _props$item.id,
       _props$item$isDependa = _props$item.isDependant,
       isDependant = _props$item$isDependa === void 0 ? false : _props$item$isDependa,
+      portalContainer = _props$item.portalContainer,
       _props$item$className = _props$item.className,
       className = _props$item$className === void 0 ? "" : _props$item$className,
       hideErrors = props.hideErrors;
@@ -354,14 +376,23 @@ var SingleField = (function (props) {
   var _id = id ? id : nanoid.nanoid();
 
   var Renderer = isDependant ? formik.Field : formik.FastField;
-  return /*#__PURE__*/React__default.createElement("div", {
-    className: "mb-6 " + className
-  }, /*#__PURE__*/React__default.createElement(LabelRenderer, props), /*#__PURE__*/React__default.createElement(Renderer, {
+  var Shell = portalContainer ? function (_ref) {
+    var children = _ref.children;
+    return /*#__PURE__*/React__default.createElement(Portal, {
+      container: portalContainer.current
+    }, children);
+  } : function (_ref2) {
+    var children = _ref2.children;
+    return /*#__PURE__*/React__default.createElement("div", {
+      className: "mb-6 " + className
+    }, children);
+  };
+  return /*#__PURE__*/React__default.createElement(Shell, null, /*#__PURE__*/React__default.createElement(LabelRenderer, props), /*#__PURE__*/React__default.createElement(Renderer, {
     type: type,
     name: _id
-  }, function (_ref) {
-    var field = _ref.field,
-        form = _ref.form;
+  }, function (_ref3) {
+    var field = _ref3.field,
+        form = _ref3.form;
 
     var onValueChanged = function onValueChanged(value) {
       if (!props.item.id) {
@@ -399,7 +430,7 @@ var SingleField = (function (props) {
   }));
 });
 
-var generate = (function (props) {
+var fields = (function (props) {
   var inputs = props.inputs;
   var items = Array.isArray(inputs) ? inputs : inputs();
   return /*#__PURE__*/React__default.createElement(formik.Form, null, items.map(function (item) {
@@ -422,7 +453,7 @@ var renderMultiItems = function renderMultiItems(props) {
       className = _props$item.className,
       items = _props$item.items;
   return /*#__PURE__*/React__default.createElement("div", {
-    className: className
+    className: "#TODO -mb-2 " + className
   }, items.map(function (_item) {
     return renderItem(_extends({}, props, {
       item: _item
@@ -535,7 +566,8 @@ var index = (function (props) {
       _props$disabled = props.disabled,
       disabled = _props$disabled === void 0 ? false : _props$disabled,
       _props$readOnly = props.readOnly,
-      readOnly = _props$readOnly === void 0 ? false : _props$readOnly;
+      readOnly = _props$readOnly === void 0 ? false : _props$readOnly,
+      children = props.children;
   var initialValues = typeof props.initialValues !== 'function' ? props.initialValues : props.initialValues && props.initialValues();
   var validationSchema = typeof props.validationSchema !== 'function' ? props.validationSchema : props.validationSchema && props.validationSchema();
 
@@ -543,6 +575,17 @@ var index = (function (props) {
 
   var valuesRef = React.useRef(initialValues ? initialValues : {});
   var cache = disableCache ? null : props.cache ? props.cache : React.useRef(new FormulaikCache()).current;
+  var containersProps = React.useRef({});
+
+  var onContainerPropsChanged = function onContainerPropsChanged(_ref) {
+    var id = _ref.id,
+        containerProps = _ref.props;
+
+    var data = _extends({}, containersProps.current);
+
+    data[id] = containerProps;
+    containersProps.current = data;
+  };
 
   var onValuesChanged = function onValuesChanged(values) {
     valuesRef.current = values;
@@ -559,9 +602,9 @@ var index = (function (props) {
     }
   };
 
-  var _onValueChanged = function _onValueChanged(_ref) {
-    var id = _ref.id,
-        value = _ref.value;
+  var _onValueChanged = function _onValueChanged(_ref2) {
+    var id = _ref2.id,
+        value = _ref2.value;
 
     var values = _extends({}, valuesRef.current);
 
@@ -580,11 +623,13 @@ var index = (function (props) {
     onSubmit: onSubmit
   }, function (formProps) {
     onFormPropsChanged && onFormPropsChanged(formProps);
-    return generate(_extends({}, formProps, props, {
+    return fields(_extends({}, formProps, props, {
       initialValues: initialValues,
       validationSchema: validationSchema,
       onValuesChanged: onValuesChanged,
       _onValueChanged: _onValueChanged,
+      containersProps: containersProps.current,
+      onContainerPropsChanged: onContainerPropsChanged,
       values: valuesRef.current,
       valuesRef: valuesRef,
       cache: cache,
@@ -593,7 +638,7 @@ var index = (function (props) {
       readOnly: readOnly,
       hideErrors: hideErrors
     }));
-  }), error && /*#__PURE__*/React__default.createElement("div", {
+  }), children, error && /*#__PURE__*/React__default.createElement("div", {
     className: "mt-6 text-pink-600 text-center"
   }, /*#__PURE__*/React__default.createElement("label", null, error.message)));
 });

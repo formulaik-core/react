@@ -1,14 +1,17 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
 import LabelRenderer from '../chunks/label'
+import Portal from '@mui/material/Portal'
+
 
 export default (props) => {
   const { item: {
     type,
     id,
     isDependant = false,
+    portalContainer,
     className = "" },
     hideErrors } = props
 
@@ -20,7 +23,11 @@ export default (props) => {
   const _id = id ? id : nanoid()
   const Renderer = isDependant ? Field : FastField
 
-  return <div className={`mb-6 ${className}`}>
+  const Shell = (portalContainer)
+    ? ({ children }) => <Portal container={portalContainer.current}>{children}</Portal>
+    : ({ children }) => <div className={`mb-6 ${className}`}>{children}</div>
+
+  return <Shell>
     <LabelRenderer {...props} />
     <Renderer type={type} name={_id} >
       {({ field, form }) => {
@@ -65,5 +72,5 @@ export default (props) => {
         </div>
       }}
     </Renderer>
-  </div>
+  </Shell>
 }
