@@ -18,7 +18,6 @@ export default (props) => {
   const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
   const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
 
-  const _form = useRef()
   const valuesRef = useRef(initialValues ? initialValues : {})
   const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
 
@@ -35,7 +34,6 @@ export default (props) => {
   const onValuesChanged = (values) => {
     valuesRef.current = values
     props.onValuesChanged && props.onValuesChanged(values)
-    //console.log('onValuesChanged hook')
   }
 
   const onSubmit = async (values, actions) => {
@@ -52,9 +50,8 @@ export default (props) => {
     onValuesChanged(values)
   }
 
-  return <div className=''>
+  return <div>
     <Formik
-      ref={_form}
       initialValues={initialValues}
       validationSchema={validationSchema}
       validateOnBlur

@@ -14,7 +14,7 @@ export default (props) => {
     hideErrors,
   } = props
 
-  return <div className={`${className}`}>
+  return <div className={`${className}`} data-id='array-index'>
     <LabelRenderer {...props} />
     <FieldArray
       type={type}

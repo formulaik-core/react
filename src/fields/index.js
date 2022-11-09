@@ -2,6 +2,8 @@ import React from 'react'
 import { Form } from 'formik'
 import ArrayField from './array'
 import SingleField from './single'
+import * as ReactDOM from 'react-dom'
+
 
 export default (props) => {
   const { inputs } = props
@@ -33,9 +35,35 @@ const renderItem = (props) => {
     return null
   }
 
+  const { portalContainer,
+    className = "" } = item
+
   if (item.isList) {
-    return <ArrayField {...props} />
+    if (portalContainer) {
+      if (!portalContainer.current) {
+        return null
+      }
+      return ReactDOM.createPortal(
+        <ArrayField {...props} />,
+        portalContainer.current
+      )
+    }
+    else {
+      return <ArrayField {...props} />
+    }
   }
 
-  return <SingleField {...props} />
+  if (portalContainer) {
+    if (!portalContainer.current) {
+      return null
+    }
+    return ReactDOM.createPortal(
+      <SingleField {...props} />,
+      portalContainer.current
+    )
+  }
+  else {
+    return <SingleField {...props} />
+  }
+  // return <Shell><SingleField {...props} /></Shell>
 }

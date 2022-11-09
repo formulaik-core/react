@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
-import Add from './chunks/add'
+import AddButton from './chunks/add'
+import * as ReactDOM from 'react-dom'
 
 export default (props) => {
   const {
@@ -14,6 +15,7 @@ export default (props) => {
       add,
       preferInitialValues,
       isDependant = false,
+      portalContainersRef
     },
     containersProps,
     hideErrors } = props
@@ -25,29 +27,17 @@ export default (props) => {
 
   const [items, setItems] = useState(_items)
 
-  const Component = componentResolver({ ...props, componentsLibraries: props.componentsLibraries, item: params })
-  if (!Component) {
-    return null
-  }
 
-  let ContainerComponent = componentResolver({
-    ...props,
-    componentsLibraries: props.componentsLibraries,
-    item: container
-  })
 
-  if (!ContainerComponent) {
-    ContainerComponent = ({ children }) => <div>{children}</div>
-  }
 
-  let AddComponent = componentResolver({
+  let AddComponent = (add && add.component) ? add.component : componentResolver({
     ...props,
     componentsLibraries: props.componentsLibraries,
     item: add
   })
 
   if (!AddComponent) {
-    AddComponent = Add
+    AddComponent = AddButton
   }
 
   const { arrayHelpers } = props
@@ -60,7 +50,11 @@ export default (props) => {
     push(newItem)
   }
 
-  const onValueChanged = (value) => {
+  const onValueChanged = (value, params) => {
+    const {
+      ignoreField = false
+    } = params ? params : {}
+
     const { item: { id },
       setFieldValue,
       setFieldTouched,
@@ -70,7 +64,7 @@ export default (props) => {
     _values[id] = value
 
     props._onValueChanged && props._onValueChanged({ id, value })
-    setItems(value)
+    !ignoreField && setItems(value)
     //setValues(_values, false)
 
     //TODO:
@@ -80,15 +74,46 @@ export default (props) => {
 
   const Renderer = isDependant ? Field : FastField
 
-  return <div>
-    <div className={`w-full overflow-x-scroll ${props.item.isHorizontal ? 'flex gap-2 pb-8' : ''}`}>
+  return <div data-id='array-container'>
+    <div data-id='array-container-content' className={`w-full overflow-x-scroll ${props.item.isHorizontal ? 'flex gap-2 pb-8' : ''}`}>
       {(items && items.length > 0) && items.map((entry, index) => {
         const itemId = `${id}.${index}`
-        return <div
-          key={index}
-          className={`form-control ${!props.item.isHorizontal ? 'mb-4' : ''}  ${className}`}>
 
-          <Renderer type={params.type} name={itemId} >
+        let ContainerComponent = componentResolver({
+          ...props,
+          componentsLibraries: props.componentsLibraries,
+          item: container,
+          index,
+          entry
+        })
+
+        if (!ContainerComponent) {
+          ContainerComponent = ({ children }) => <div>{children}</div>
+        }
+
+        const Component = componentResolver({
+          ...props,
+          componentsLibraries: props.componentsLibraries,
+          item: params,
+          index,
+          entry
+        })
+
+        if (!Component) {
+          return null
+        }
+
+
+        return <div
+          data-id='array-container-content-entry'
+          key={index}
+          className={`form-control ${!props.item.isHorizontal ? '' : ''}  ${className}`}>
+
+          <Renderer
+            data-id='array-renderer'
+            className='bg-rose-200 p-2'
+            type={params.type}
+            name={itemId} >
             {({ field, form }) => {
 
               const onRemoveRequired = () => {
@@ -126,10 +151,10 @@ export default (props) => {
                 onValueChanged(_i)
               }
 
-              const onEntryValuesChanged = (value) => {
+              const onEntryValuesChanged = (value, params) => {
                 const _i = [...props.valuesRef.current[id]]
                 _i[index] = value
-                onValueChanged(_i)
+                onValueChanged(_i, params)
               }
 
               const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
@@ -145,30 +170,88 @@ export default (props) => {
                 props.onContainerPropsChanged({ id: itemId, props: containerProps })
               }
 
-              return <ContainerComponent
-                {...container}
-                // {...props}
-                {...props.item}
-                arrayHelpers={arrayHelpers}
-                onMoveDownRequired={onMoveDownRequired}
-                onMoveUpRequired={onMoveUpRequired}
-                onRemoveRequired={onRemoveRequired}
-                canMoveUp={props.item.canMove && (index > 0)}
-                canMoveDown={props.item.canMove && (index < (items.length - 1))}
-                canRemove={props.item.canRemove}
-                showControls={props.item.showControls}
-                index={index}
-                value={entry}
-                containerProps={containersProps[itemId]}
-                onContainerPropsChanged={onContainerPropsChanged}>
-                <Component
-                  {...adaptedProps}
-                  disabled={disabled}
-                  readOnly={readOnly}
+              const containerClassName = () => {
+                if (!container.className) {
+                  return ''
+                }
+
+                if (typeof container.className !== 'function') {
+                  return container.className
+                }
+
+                const className = container.className({ index, entry })
+                return className
+              }
+
+              if (portalContainersRef &&
+                portalContainersRef.current) {
+
+                if (!portalContainersRef.current.length
+                  || index >= portalContainersRef.current.length) {
+                  return null
+                }
+
+                const portalContainer = portalContainersRef.current[index]
+                if (!portalContainer) {
+                  return null
+                }
+
+                return ReactDOM.createPortal(
+                  <ContainerComponent
+                    {...container}
+                    // {...props}
+                    {...props.item}
+                    className={containerClassName()}
+                    arrayHelpers={arrayHelpers}
+                    onMoveDownRequired={onMoveDownRequired}
+                    onMoveUpRequired={onMoveUpRequired}
+                    onRemoveRequired={onRemoveRequired}
+                    canMoveUp={props.item.canMove && (index > 0)}
+                    canMoveDown={props.item.canMove && (index < (items.length - 1))}
+                    canRemove={props.item.canRemove}
+                    showControls={props.item.showControls}
+                    index={index}
+                    value={entry}
+                    containerProps={containersProps[itemId]}
+                    onContainerPropsChanged={onContainerPropsChanged}>
+                    <Component
+                      {...adaptedProps}
+                      disabled={disabled}
+                      readOnly={readOnly}
+                      value={entry}
+                      // {...params}
+                      onValueChanged={onEntryValuesChanged} />
+                  </ContainerComponent>,
+                  portalContainer
+                )
+              }
+              else {
+                return <ContainerComponent
+                  {...container}
+                  // {...props}
+                  {...props.item}
+                  className={containerClassName()}
+                  arrayHelpers={arrayHelpers}
+                  onMoveDownRequired={onMoveDownRequired}
+                  onMoveUpRequired={onMoveUpRequired}
+                  onRemoveRequired={onRemoveRequired}
+                  canMoveUp={props.item.canMove && (index > 0)}
+                  canMoveDown={props.item.canMove && (index < (items.length - 1))}
+                  canRemove={props.item.canRemove}
+                  showControls={props.item.showControls}
+                  index={index}
                   value={entry}
-                  // {...params}
-                  onValueChanged={onEntryValuesChanged} />
-              </ContainerComponent>
+                  containerProps={containersProps[itemId]}
+                  onContainerPropsChanged={onContainerPropsChanged}>
+                  <Component
+                    {...adaptedProps}
+                    disabled={disabled}
+                    readOnly={readOnly}
+                    value={entry}
+                    // {...params}
+                    onValueChanged={onEntryValuesChanged} />
+                </ContainerComponent>
+              }
             }}
           </Renderer>
           {!hideErrors ?
@@ -180,9 +263,13 @@ export default (props) => {
         </div>
       })}
     </div>
-    {(!props.disabled && props.item.canAddItems && !items.length < props.item.maxItems) &&
+    {(
+      !props.disabled
+      && props.item.canAddItems
+      && items.length < props.item.maxItems)
+      &&
       <AddComponent
-        onClick={onAdd}
+        onAdd={onAdd}
         title={add.title}
         disabled={items.length >= props.item.maxItems} />
     }
