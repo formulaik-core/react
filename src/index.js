@@ -50,7 +50,7 @@ export default (props) => {
     onValuesChanged(values)
   }
 
-  return <div>
+  return <React.Fragment>
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
@@ -83,5 +83,5 @@ export default (props) => {
       <div className="mt-6 text-pink-600 text-center">
         <label>{error.message}</label>
       </div>}
-  </div>
-}
+  </React.Fragment>
+} 

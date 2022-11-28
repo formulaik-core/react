@@ -43,8 +43,11 @@ export default (props) => {
   const { arrayHelpers } = props
   const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
 
-  const onAdd = async () => {
-    const newItem = params.params.placeholder ? await params.params.placeholder() : null
+  const onAdd = async (toAdd) => {
+    const newItem = toAdd
+      ? toAdd
+      : (params.params.placeholder ? await params.params.placeholder() : null)
+
     const _i = [...items, newItem]
     onValueChanged(_i)
     push(newItem)
@@ -268,10 +271,26 @@ export default (props) => {
       && props.item.canAddItems
       && items.length < props.item.maxItems)
       &&
-      <AddComponent
-        onAdd={onAdd}
-        title={add.title}
-        disabled={items.length >= props.item.maxItems} />
+      (() => {
+        if (add.portalContainer) {
+          if (!add.portalContainer.current) {
+            return null
+          }
+
+          return ReactDOM.createPortal(
+            <AddComponent
+              onAdd={onAdd}
+              title={add.title}
+              disabled={items.length >= props.item.maxItems} />,
+            add.portalContainer.current
+          )
+        }
+        return <AddComponent
+          onAdd={onAdd}
+          title={add.title}
+          disabled={items.length >= props.item.maxItems} />,
+          add.portalContainer
+      })()
     }
   </div>
 }

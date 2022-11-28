@@ -26935,7 +26935,7 @@ var render$1 = (function (props) {
       push = arrayHelpers.push,
       remove = arrayHelpers.remove;
 
-  var onAdd = function onAdd() {
+  var onAdd = function onAdd(toAdd) {
     try {
       var _temp2 = function _temp2(newItem) {
         var _i = [].concat(items, [newItem]);
@@ -26944,8 +26944,9 @@ var render$1 = (function (props) {
         push(newItem);
       };
 
-      var _params$params$placeh2 = params.params.placeholder;
-      return Promise.resolve(_params$params$placeh2 ? Promise.resolve(params.params.placeholder()).then(_temp2) : _temp2(null));
+      var _params$params$placeh2 = toAdd || params.params.placeholder;
+
+      return Promise.resolve(toAdd || !_params$params$placeh2 ? _temp2(toAdd ? toAdd : _params$params$placeh2 ? params.params.placeholder() : null) : Promise.resolve(toAdd ? toAdd : _params$params$placeh2 ? params.params.placeholder() : null).then(_temp2));
     } catch (e) {
       return Promise.reject(e);
     }
@@ -27151,11 +27152,25 @@ var render$1 = (function (props) {
       component: "div",
       className: "text-sm text-red-600 pt-2"
     }) : null);
-  })), !props.disabled && props.item.canAddItems && items.length < props.item.maxItems && /*#__PURE__*/React__default.createElement(AddComponent, {
-    onAdd: onAdd,
-    title: add.title,
-    disabled: items.length >= props.item.maxItems
-  }));
+  })), !props.disabled && props.item.canAddItems && items.length < props.item.maxItems && function () {
+    if (add.portalContainer) {
+      if (!add.portalContainer.current) {
+        return null;
+      }
+
+      return undefined( /*#__PURE__*/React__default.createElement(AddComponent, {
+        onAdd: onAdd,
+        title: add.title,
+        disabled: items.length >= props.item.maxItems
+      }), add.portalContainer.current);
+    }
+
+    return /*#__PURE__*/React__default.createElement(AddComponent, {
+      onAdd: onAdd,
+      title: add.title,
+      disabled: items.length >= props.item.maxItems
+    }), add.portalContainer;
+  }());
 });
 
 var ErrorMessage = (function (_ref) {
@@ -27475,7 +27490,7 @@ var index = (function (props) {
     onValuesChanged(values);
   };
 
-  return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement(formik.Formik, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(formik.Formik, {
     initialValues: initialValues,
     validationSchema: validationSchema,
     validateOnBlur: true,
