@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
 import AddButton from './chunks/add'
@@ -315,8 +315,8 @@ export default (props) => {
 
           onAdd={onAdd}
           title={add.title}
-          disabled={items.length >= props.item.maxItems} />,
-          add.portalContainer
+          disabled={items.length >= props.item.maxItems} />
+        // add.portalContainer
       })()
     }
   </div>
