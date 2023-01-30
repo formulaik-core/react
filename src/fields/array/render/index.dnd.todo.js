@@ -54,7 +54,7 @@ export default (props) => {
 
   const onValueChanged = (value, params) => {
     const {
-      ignoreField = false
+      resetItems = false
     } = params ? params : {}
 
     const { item: { id },
@@ -66,7 +66,7 @@ export default (props) => {
     _values[id] = value
 
     props._onValueChanged && props._onValueChanged({ id, value })
-    !ignoreField && setItems(value)
+    !resetItems && setItems(value)
     //setValues(_values, false)
 
     //TODO:

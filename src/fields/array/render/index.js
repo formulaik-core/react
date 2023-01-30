@@ -27,9 +27,6 @@ export default (props) => {
 
   const [items, setItems] = useState(_items)
 
-
-
-
   let AddComponent = (add && add.component) ? add.component : componentResolver({
     ...props,
     componentsLibraries: props.componentsLibraries,
@@ -49,30 +46,37 @@ export default (props) => {
       : (params.params.placeholder ? await params.params.placeholder() : null)
 
     const _i = [...items, newItem]
-    onValueChanged(_i)
+    onValueChanged(_i, {
+      resetItems: false,
+      operation: {
+        type: 'add'
+      },
+      item: { ...newItem },
+      index: (_i.length - 1)
+    })
     push(newItem)
   }
 
   const onValueChanged = (value, params) => {
     const {
-      ignoreField = false
+      resetItems = false
     } = params ? params : {}
 
-    const { item: { id },
-      setFieldValue,
-      setFieldTouched,
-      setValues } = props
+    const { item: { id } } = props
 
     const _values = { ...props.valuesRef.current }
     _values[id] = value
 
-    props._onValueChanged && props._onValueChanged({ id, value })
-    !ignoreField && setItems(value)
-    //setValues(_values, false)
+    if (props._onValueChanged) {
+      props._onValueChanged(
+        { id, value },
+        {
+          ...params,
+        }
+      )
+    }
 
-    //TODO:
-    //setFieldValue(id, value, true)
-    // setFieldTouched(id, true, false)
+    !resetItems && setItems(value)
   }
 
   const Renderer = isDependant ? Field : FastField
@@ -106,7 +110,6 @@ export default (props) => {
           return null
         }
 
-
         return <div
           data-id='array-container-content-entry'
           key={index}
@@ -122,8 +125,16 @@ export default (props) => {
               const onRemoveRequired = () => {
                 remove(index)
                 const _i = [...props.valuesRef.current[id]]
+                const object = _i[index]
                 _i.splice(index, 1)
-                onValueChanged(_i)
+                onValueChanged(_i, {
+                  resetItems: false,
+                  operation: {
+                    type: 'remove'
+                  },
+                  item: object,
+                  index
+                })
               }
 
               const onMoveDownRequired = () => {
@@ -137,7 +148,14 @@ export default (props) => {
                 const other = _i[index + 1]
                 _i[index] = other
                 _i[index + 1] = object
-                onValueChanged(_i)
+                onValueChanged(_i, {
+                  resetItems: false,
+                  operation: {
+                    type: 'moveDown'
+                  },
+                  item: object,
+                  index
+                })
               }
 
               const onMoveUpRequired = () => {
@@ -151,7 +169,14 @@ export default (props) => {
                 const other = _i[index - 1]
                 _i[index] = other
                 _i[index - 1] = object
-                onValueChanged(_i)
+                onValueChanged(_i, {
+                  resetItems: false,
+                  operation: {
+                    type: 'moveUp',
+                  },
+                  item: object,
+                  index
+                })
               }
 
               const onEntryValuesChanged = (value, params) => {
@@ -279,6 +304,7 @@ export default (props) => {
 
           return ReactDOM.createPortal(
             <AddComponent
+
               onAdd={onAdd}
               title={add.title}
               disabled={items.length >= props.item.maxItems} />,
@@ -286,6 +312,7 @@ export default (props) => {
           )
         }
         return <AddComponent
+
           onAdd={onAdd}
           title={add.title}
           disabled={items.length >= props.item.maxItems} />,

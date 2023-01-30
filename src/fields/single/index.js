@@ -28,7 +28,7 @@ export default (props) => {
 
         const onValueChanged = (value, params) => {
           const {
-            ignoreField = false
+            resetItems = false
           } = params ? params : {}
           //console.log('onValueChanged', value)
           if (!props.item.id) {
@@ -38,8 +38,8 @@ export default (props) => {
 
           props._onValueChanged && props._onValueChanged({ id, value })
 
-          !ignoreField && setFieldValue(id, value, true)
-          !ignoreField && setFieldTouched(id, true, false)
+          !resetItems && setFieldValue(id, value, true)
+          !resetItems && setFieldTouched(id, true, false)
         }
 
         const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)

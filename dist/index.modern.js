@@ -26937,7 +26937,14 @@ var render$1 = (function (props) {
       var _temp2 = function _temp2(newItem) {
         var _i = [].concat(items, [newItem]);
 
-        onValueChanged(_i);
+        onValueChanged(_i, {
+          resetItems: false,
+          operation: {
+            type: 'add'
+          },
+          item: _extends({}, newItem),
+          index: _i.length - 1
+        });
         push(newItem);
       };
 
@@ -26951,19 +26958,23 @@ var render$1 = (function (props) {
 
   var onValueChanged = function onValueChanged(value, params) {
     var _ref = params ? params : {},
-        _ref$ignoreField = _ref.ignoreField,
-        ignoreField = _ref$ignoreField === void 0 ? false : _ref$ignoreField;
+        _ref$resetItems = _ref.resetItems,
+        resetItems = _ref$resetItems === void 0 ? false : _ref$resetItems;
 
     var id = props.item.id;
 
     var _values = _extends({}, props.valuesRef.current);
 
     _values[id] = value;
-    props._onValueChanged && props._onValueChanged({
-      id: id,
-      value: value
-    });
-    !ignoreField && setItems(value);
+
+    if (props._onValueChanged) {
+      props._onValueChanged({
+        id: id,
+        value: value
+      }, _extends({}, params));
+    }
+
+    !resetItems && setItems(value);
   };
 
   var Renderer = isDependant ? Field : FastField;
@@ -27015,9 +27026,18 @@ var render$1 = (function (props) {
 
         var _i = [].concat(props.valuesRef.current[id]);
 
+        var object = _i[index];
+
         _i.splice(index, 1);
 
-        onValueChanged(_i);
+        onValueChanged(_i, {
+          resetItems: false,
+          operation: {
+            type: 'remove'
+          },
+          item: object,
+          index: index
+        });
       };
 
       var onMoveDownRequired = function onMoveDownRequired() {
@@ -27033,7 +27053,14 @@ var render$1 = (function (props) {
         var other = _i[index + 1];
         _i[index] = other;
         _i[index + 1] = object;
-        onValueChanged(_i);
+        onValueChanged(_i, {
+          resetItems: false,
+          operation: {
+            type: 'moveDown'
+          },
+          item: object,
+          index: index
+        });
       };
 
       var onMoveUpRequired = function onMoveUpRequired() {
@@ -27049,7 +27076,14 @@ var render$1 = (function (props) {
         var other = _i[index - 1];
         _i[index] = other;
         _i[index - 1] = object;
-        onValueChanged(_i);
+        onValueChanged(_i, {
+          resetItems: false,
+          operation: {
+            type: 'moveUp'
+          },
+          item: object,
+          index: index
+        });
       };
 
       var onEntryValuesChanged = function onEntryValuesChanged(value, params) {
@@ -27252,8 +27286,8 @@ var SingleField = (function (props) {
 
     var onValueChanged = function onValueChanged(value, params) {
       var _ref2 = params ? params : {},
-          _ref2$ignoreField = _ref2.ignoreField,
-          ignoreField = _ref2$ignoreField === void 0 ? false : _ref2$ignoreField;
+          _ref2$resetItems = _ref2.resetItems,
+          resetItems = _ref2$resetItems === void 0 ? false : _ref2$resetItems;
 
       if (!props.item.id) {
         return;
@@ -27266,8 +27300,8 @@ var SingleField = (function (props) {
         id: id,
         value: value
       });
-      !ignoreField && setFieldValue(id, value, true);
-      !ignoreField && setFieldTouched(id, true, false);
+      !resetItems && setFieldValue(id, value, true);
+      !resetItems && setFieldTouched(id, true, false);
     };
 
     var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
@@ -27462,9 +27496,9 @@ var index = (function (props) {
     containersProps.current = data;
   };
 
-  var onValuesChanged = function onValuesChanged(values) {
+  var onValuesChanged = function onValuesChanged(values, params) {
     valuesRef.current = values;
-    props.onValuesChanged && props.onValuesChanged(values);
+    props.onValuesChanged && props.onValuesChanged(values, params);
   };
 
   var onSubmit = function onSubmit(values, actions) {
@@ -27477,14 +27511,14 @@ var index = (function (props) {
     }
   };
 
-  var _onValueChanged = function _onValueChanged(_ref2) {
+  var _onValueChanged = function _onValueChanged(_ref2, params) {
     var id = _ref2.id,
         value = _ref2.value;
 
     var values = _extends({}, valuesRef.current);
 
     values[id] = value;
-    onValuesChanged(values);
+    onValuesChanged(values, params);
   };
 
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Formik, {

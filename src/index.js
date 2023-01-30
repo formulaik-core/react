@@ -31,9 +31,9 @@ export default (props) => {
     containersProps.current = data
   }
 
-  const onValuesChanged = (values) => {
+  const onValuesChanged = (values, params) => {
     valuesRef.current = values
-    props.onValuesChanged && props.onValuesChanged(values)
+    props.onValuesChanged && props.onValuesChanged(values, params)
   }
 
   const onSubmit = async (values, actions) => {
@@ -42,12 +42,12 @@ export default (props) => {
     return props.onSubmit(valuesRef.current, actions)
   }
 
-  const _onValueChanged = ({ id, value }) => {
+  const _onValueChanged = ({ id, value }, params) => {
     const values = {
       ...valuesRef.current,
     }
     values[id] = value
-    onValuesChanged(values)
+    onValuesChanged(values, params)
   }
 
   return <React.Fragment>
