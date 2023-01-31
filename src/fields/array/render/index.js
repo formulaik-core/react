@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React from 'react'
 import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
 import AddButton from './chunks/add'
@@ -25,7 +25,7 @@ export default (props) => {
     _items = []
   }
 
-  const [items, setItems] = useState(_items)
+  const [items, setItems] = React.useState(_items)
 
   let AddComponent = (add && add.component) ? add.component : componentResolver({
     ...props,
