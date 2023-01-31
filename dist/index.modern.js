@@ -26978,9 +26978,9 @@ var render$1 = (function (props) {
   };
 
   var Renderer = isDependant ? Field : FastField;
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React$1.createElement("div", {
     "data-id": "array-container"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React$1.createElement("div", {
     "data-id": "array-container-content",
     className: "w-full overflow-x-scroll " + (props.item.isHorizontal ? 'flex gap-2 pb-8' : '')
   }, items && items.length > 0 && items.map(function (entry, index) {
@@ -26995,7 +26995,7 @@ var render$1 = (function (props) {
     if (!ContainerComponent) {
       ContainerComponent = function ContainerComponent(_ref2) {
         var children = _ref2.children;
-        return /*#__PURE__*/React.createElement("div", null, children);
+        return /*#__PURE__*/React$1.createElement("div", null, children);
       };
     }
 
@@ -27010,11 +27010,11 @@ var render$1 = (function (props) {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return /*#__PURE__*/React$1.createElement("div", {
       "data-id": "array-container-content-entry",
       key: index,
       className: "form-control " + (!props.item.isHorizontal ? '' : '') + "  " + className
-    }, /*#__PURE__*/React.createElement(Renderer, {
+    }, /*#__PURE__*/React$1.createElement(Renderer, {
       "data-id": "array-renderer",
       className: "bg-rose-200 p-2",
       type: params.type,
@@ -27136,7 +27136,7 @@ var render$1 = (function (props) {
           return null;
         }
 
-        return undefined( /*#__PURE__*/React.createElement(ContainerComponent, _extends({}, container, props.item, {
+        return undefined( /*#__PURE__*/React$1.createElement(ContainerComponent, _extends({}, container, props.item, {
           className: containerClassName(),
           arrayHelpers: arrayHelpers,
           onMoveDownRequired: onMoveDownRequired,
@@ -27150,14 +27150,14 @@ var render$1 = (function (props) {
           value: entry,
           containerProps: containersProps[itemId],
           onContainerPropsChanged: onContainerPropsChanged
-        }), /*#__PURE__*/React.createElement(Component, _extends({}, adaptedProps, {
+        }), /*#__PURE__*/React$1.createElement(Component, _extends({}, adaptedProps, {
           disabled: disabled,
           readOnly: readOnly,
           value: entry,
           onValueChanged: onEntryValuesChanged
         }))), portalContainer);
       } else {
-        return /*#__PURE__*/React.createElement(ContainerComponent, _extends({}, container, props.item, {
+        return /*#__PURE__*/React$1.createElement(ContainerComponent, _extends({}, container, props.item, {
           className: containerClassName(),
           arrayHelpers: arrayHelpers,
           onMoveDownRequired: onMoveDownRequired,
@@ -27171,14 +27171,14 @@ var render$1 = (function (props) {
           value: entry,
           containerProps: containersProps[itemId],
           onContainerPropsChanged: onContainerPropsChanged
-        }), /*#__PURE__*/React.createElement(Component, _extends({}, adaptedProps, {
+        }), /*#__PURE__*/React$1.createElement(Component, _extends({}, adaptedProps, {
           disabled: disabled,
           readOnly: readOnly,
           value: entry,
           onValueChanged: onEntryValuesChanged
         })));
       }
-    }), !hideErrors ? /*#__PURE__*/React.createElement(ErrorMessage$1, {
+    }), !hideErrors ? /*#__PURE__*/React$1.createElement(ErrorMessage$1, {
       name: itemId,
       component: "div",
       className: "text-sm text-red-600 pt-2"
@@ -27189,14 +27189,14 @@ var render$1 = (function (props) {
         return null;
       }
 
-      return undefined( /*#__PURE__*/React.createElement(AddComponent, {
+      return undefined( /*#__PURE__*/React$1.createElement(AddComponent, {
         onAdd: onAdd,
         title: add.title,
         disabled: items.length >= props.item.maxItems
       }), add.portalContainer.current);
     }
 
-    return /*#__PURE__*/React.createElement(AddComponent, {
+    return /*#__PURE__*/React$1.createElement(AddComponent, {
       onAdd: onAdd,
       title: add.title,
       disabled: items.length >= props.item.maxItems
@@ -27277,7 +27277,7 @@ var SingleField = (function (props) {
   var _id = id ? id : nanoid();
 
   var Renderer = isDependant ? Field : FastField;
-  return /*#__PURE__*/React$1.createElement("div", null, /*#__PURE__*/React$1.createElement(LabelRenderer, props), /*#__PURE__*/React$1.createElement(Renderer, {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(LabelRenderer, props), /*#__PURE__*/React.createElement(Renderer, {
     type: type,
     name: _id
   }, function (_ref) {
@@ -27306,7 +27306,7 @@ var SingleField = (function (props) {
 
     var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
     var readOnly = props.readOnly || props.props && props.props.readOnly;
-    return /*#__PURE__*/React$1.createElement("div", null, /*#__PURE__*/React$1.createElement(Component, _extends({}, props, {
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Component, _extends({}, props, {
       disabled: disabled,
       readOnly: readOnly,
       value: props.values[id],
@@ -27314,9 +27314,9 @@ var SingleField = (function (props) {
       field: field,
       form: form,
       onValueChanged: onValueChanged
-    })), !hideErrors && id ? /*#__PURE__*/React$1.createElement("div", {
+    })), !hideErrors && id ? /*#__PURE__*/React.createElement("div", {
       className: " my-2 mb-4 px-2 rounded-b-lg"
-    }, /*#__PURE__*/React$1.createElement(ErrorMessage$1, {
+    }, /*#__PURE__*/React.createElement(ErrorMessage$1, {
       name: _id,
       component: "div",
       className: "text-sm text-pink-600"

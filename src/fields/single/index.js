@@ -1,3 +1,4 @@
+import React from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
