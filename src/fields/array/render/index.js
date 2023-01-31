@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
 import AddButton from './chunks/add'
@@ -41,9 +41,17 @@ export default (props) => {
   const { move, swap, push, insert, unshift, pop, remove, form } = arrayHelpers
 
   const onAdd = async (toAdd) => {
-    const newItem = toAdd
-      ? toAdd
-      : (params.params.placeholder ? await params.params.placeholder() : null)
+    // const newItem = toAdd
+    //   ? toAdd
+    //   : (params.params.placeholder ? await params.params.placeholder() : null)
+
+    let newItem = null
+    if (toAdd && (!toAdd.type || toAdd.type !== 'click')) {
+      newItem = toAdd
+    }
+    else if (params.params.placeholder) {
+      newItem = await params.params.placeholder()
+    }
 
     const _i = [...items, newItem]
     onValueChanged(_i, {
@@ -304,19 +312,17 @@ export default (props) => {
 
           return ReactDOM.createPortal(
             <AddComponent
-
               onAdd={onAdd}
               title={add.title}
               disabled={items.length >= props.item.maxItems} />,
             add.portalContainer.current
           )
         }
-        return <AddComponent
 
+        return <AddComponent
           onAdd={onAdd}
           title={add.title}
           disabled={items.length >= props.item.maxItems} />
-        // add.portalContainer
       })()
     }
   </div>
