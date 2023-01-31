@@ -1,9 +1,7 @@
-import React from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
 import LabelRenderer from '../chunks/label'
-import * as ReactDOM from 'react-dom'
 
 export default (props) => {
   const { item: {
