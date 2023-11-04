@@ -1,6 +1,6 @@
-# formulaik
+# Formulaik React JS Engine
 
-> Core formulaik engine.
+> Core formulaik engine for React JS
 
 [![NPM](https://img.shields.io/npm/v/formulaik.svg)](https://www.npmjs.com/package/formulaik) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 

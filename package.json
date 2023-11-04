@@ -1,10 +1,11 @@
 {
   "name": "@formulaik-community/formulaik-engine-react",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.modern.js",
   "source": "src/index.js",
-  "main": "src/index.js",
   "version": "0.0.0-development",
-  "description": "Formulaik engine react",
+  "description": "Formulaik React JS Engine",
   "author": "Formulaik Community",
   "license": "ISC",
   "bugs": {
