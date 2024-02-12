@@ -1,5 +1,5 @@
 {
-  "name": "@formulaik-community/formulaik-engine-react",
+  "name": "@formulaik/react",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",

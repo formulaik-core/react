@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-npm install --save formulaik
+npm install --save @formulaik/react
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install --save formulaik
 ```jsx
 import React, { Component } from 'react'
 
-import MyComponent from 'formulaik'
+import Formulaik from '@formulaik/react'
 import 'formulaik/dist/index.css'
 
 class Example extends Component {
