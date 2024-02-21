@@ -18,12 +18,12 @@ npm install --save @formulaik/engine-react
 1. Install formulaik, yup for validation and a component library
 
 ```bash
-npm install yup @formulaik-community/formulaik-mui-react
+npm install yup @formulaik-community/react-mui
 ```
 
 ```jsx
 import Formulaik from '@formulaik/engine-react'
-import FormulaikMui from '@formulaik-community/formulaik-mui-react'
+import FormulaikMui from '@formulaik-community/react-mui'
 import * as Yup from 'yup'
 ```
 
