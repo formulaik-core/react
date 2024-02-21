@@ -10,7 +10,7 @@ Formulaik's documentation is available [here](https://formulaik-core.github.io/d
 ## Install
 
 ```bash
-npm install --save @formulaik/engine-react-formik
+npm install --save @formulaik/engine-react
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ npm install yup @formulaik-community/formulaik-mui-react
 ```
 
 ```jsx
-import Formulaik from '@formulaik/engine-react-formik'
+import Formulaik from '@formulaik/engine-react'
 import FormulaikMui from '@formulaik-community/formulaik-mui-react'
 import * as Yup from 'yup'
 ```
