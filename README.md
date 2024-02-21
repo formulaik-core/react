@@ -1,7 +1,5 @@
 # Formulaik React JS Engine
 
-> Core formulaik engine for React JS
-
 [![NPM](https://img.shields.io/npm/v/formulaik.svg)](https://www.npmjs.com/package/formulaik) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Documentation
@@ -10,7 +8,7 @@ Formulaik's documentation is available [here](https://formulaik-core.github.io/d
 ## Install
 
 ```bash
-npm install --save @formulaik/engine-react
+npm install --save @formulaik/react
 ```
 
 ## Usage
@@ -22,7 +20,7 @@ npm install yup @formulaik-community/react-mui
 ```
 
 ```jsx
-import Formulaik from '@formulaik/engine-react'
+import Formulaik from '@formulaik/react'
 import FormulaikMui from '@formulaik-community/react-mui'
 import * as Yup from 'yup'
 ```
