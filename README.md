@@ -4,6 +4,9 @@
 
 [![NPM](https://img.shields.io/npm/v/formulaik.svg)](https://www.npmjs.com/package/formulaik) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+## Documentation
+Formulaik's documentation is available [here](https://formulaik-core.github.io/documentation/)
+
 ## Install
 
 ```bash
