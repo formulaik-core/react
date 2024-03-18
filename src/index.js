@@ -15,11 +15,18 @@ export default (props) => {
   } = props
 
   //console.log("Solliciting formulaik", props)
-  const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
-  const validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
+  const initialValues = (typeof props.initialValues !== 'function')
+    ? props.initialValues
+    : (props.initialValues && props.initialValues())
+
+  const validationSchema = (typeof props.validationSchema !== 'function')
+    ? props.validationSchema
+    : (props.validationSchema && props.validationSchema())
 
   const valuesRef = useRef(initialValues ? initialValues : {})
-  const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
+  const cache = disableCache
+    ? null
+    : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
 
   const containersProps = useRef({})
 
