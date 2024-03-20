@@ -16,7 +16,9 @@ export default (props) => {
   } = props
 
   //console.log("Solliciting formulaik", props)
-  const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
+  const _initialValues = props.initialValues ? props.initialValues : props.values
+  const initialValues = (typeof _initialValues !== 'function') ? _initialValues : (props.initialValues && _initialValues())
+
   let validationSchema = null
   if (props.validationSchema) {
     validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
@@ -91,4 +93,4 @@ export default (props) => {
         <label>{error.message}</label>
       </div>}
   </React.Fragment>
-} 
+}
