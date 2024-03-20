@@ -1,5 +1,6 @@
 export default (props) => {
   const {
+
     item,
     cache,
     index,

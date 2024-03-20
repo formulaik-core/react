@@ -1,3 +1,4 @@
+import React from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
@@ -26,7 +27,7 @@ export default (props) => {
   const Renderer = isDependant ? Field : FastField
 
 
-  return <>
+  return <React.Fragment>
     <div>
       <LabelRenderer {...props} />
       <Renderer type={_type} name={_id} >
@@ -88,5 +89,5 @@ export default (props) => {
         color: #DC2626;
       }
     `}</style>
-  </>
+  </React.Fragment>
 }

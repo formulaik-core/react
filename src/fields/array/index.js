@@ -1,3 +1,4 @@
+import React from 'react'
 import { FieldArray, } from 'formik'
 import render from './render'
 import ErrorMessage from './errorMessage'
@@ -16,7 +17,7 @@ export default (props) => {
 
   const _type = input ? input : type
 
-  return <>
+  return <React.Fragment>
     <div className={`${className}`} data-id='array-index'>
       <LabelRenderer {...props} />
       <FieldArray
@@ -47,5 +48,5 @@ export default (props) => {
         color: #DC2626;
       }
     `}</style>
-  </>
+  </React.Fragment>
 }
