@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { Formik } from 'formik'
 import fields from './fields'
 import FormulaikCache from './cache'
+import yupFromSchema from './lib/yupFromSchema.js'
 
 export default (props) => {
   const {
@@ -15,18 +16,17 @@ export default (props) => {
   } = props
 
   //console.log("Solliciting formulaik", props)
-  const initialValues = (typeof props.initialValues !== 'function')
-    ? props.initialValues
-    : (props.initialValues && props.initialValues())
-
-  const validationSchema = (typeof props.validationSchema !== 'function')
-    ? props.validationSchema
-    : (props.validationSchema && props.validationSchema())
+  const initialValues = (typeof props.initialValues !== 'function') ? props.initialValues : (props.initialValues && props.initialValues())
+  let validationSchema = null
+  if (props.validationSchema) {
+    validationSchema = (typeof props.validationSchema !== 'function') ? props.validationSchema : (props.validationSchema && props.validationSchema())
+  }
+  else {
+    validationSchema = yupFromSchema({ inputs: props.inputs })
+  }
 
   const valuesRef = useRef(initialValues ? initialValues : {})
-  const cache = disableCache
-    ? null
-    : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
+  const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
 
   const containersProps = useRef({})
 
@@ -87,8 +87,8 @@ export default (props) => {
     </Formik>
     {children}
     {error &&
-      <div className="mt-6 text-pink-600 text-center">
+      <div className="mt-6 text-customc-main text-center">
         <label>{error.message}</label>
       </div>}
   </React.Fragment>
-}
+} 

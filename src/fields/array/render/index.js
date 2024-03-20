@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
 import AddButton from './chunks/add'
@@ -25,11 +25,11 @@ export default (props) => {
     _items = []
   }
 
-  const [items, setItems] = React.useState(_items)
+  const [items, setItems] = useState(_items)
 
   let AddComponent = (add && add.component) ? add.component : componentResolver({
     ...props,
-    componentsLibraries: props.componentsLibraries,
+    components: props.components,
     item: add
   })
 
@@ -89,14 +89,14 @@ export default (props) => {
 
   const Renderer = isDependant ? Field : FastField
 
-  return <div data-id='array-container'>
-    <div data-id='array-container-content' className={`w-full overflow-x-scroll ${props.item.isHorizontal ? 'flex gap-2 pb-8' : ''}`}>
+  return <><div data-id='array-container'>
+    <div data-id='array-container-content' className={`container-content ${props.item.isHorizontal ? 'container-content-horizontal' : ''}`}>
       {(items && items.length > 0) && items.map((entry, index) => {
         const itemId = `${id}.${index}`
 
         let ContainerComponent = componentResolver({
           ...props,
-          componentsLibraries: props.componentsLibraries,
+          components: props.components,
           item: container,
           index,
           entry
@@ -108,7 +108,7 @@ export default (props) => {
 
         const Component = componentResolver({
           ...props,
-          componentsLibraries: props.componentsLibraries,
+          components: props.components,
           item: params,
           index,
           entry
@@ -125,7 +125,7 @@ export default (props) => {
 
           <Renderer
             data-id='array-renderer'
-            className='bg-rose-200 p-2'
+            className={'renderer'}
             type={params.type}
             name={itemId} >
             {({ field, form }) => {
@@ -294,7 +294,7 @@ export default (props) => {
             <BaseErrorMesssage
               name={itemId}
               component="div"
-              className="text-sm text-red-600 pt-2" />
+              className="error-message" />
             : null}
         </div>
       })}
@@ -326,4 +326,28 @@ export default (props) => {
       })()
     }
   </div>
+    <style jsx>{`      
+      .container-content {
+        /* w-full overflow-x-scroll */
+        overflow-x: scroll; 
+        width: 100%; 
+      }
+      .container-content-horizontal {
+        /* flex gap-2 pb-8 */
+        display: flex; 
+        padding-bottom: 2rem; 
+        gap: 0.5rem; 
+      }
+      .renderer {
+        padding: 0.5rem; 
+      }
+      .error-message {
+        /* text-sm text-red-600 pt-2 */
+        padding-top: 0.5rem; 
+        font-size: 0.875rem;
+        line-height: 1.25rem; 
+        color: #DC2626;
+      }
+    `}</style>
+  </>
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
@@ -12,7 +11,13 @@ export default (props) => {
     className = "" },
     hideErrors } = props
 
-  const Component = componentResolver({ ...props, componentsLibraries: props.componentsLibraries, item: props.item })
+  const _type = props.component ? props.component : type
+  const Component = componentResolver({
+    ...props,
+    components: props.components,
+    item: props.item
+  })
+
   if (!Component) {
     return null
   }
@@ -20,53 +25,68 @@ export default (props) => {
   const _id = id ? id : nanoid()
   const Renderer = isDependant ? Field : FastField
 
-  return <div>
-    <LabelRenderer {...props} />
-    <Renderer type={type} name={_id} >
-      {({ field, form }) => {
 
-        const onValueChanged = (value, params) => {
-          const {
-            resetItems = false
-          } = params ? params : {}
-          //console.log('onValueChanged', value)
-          if (!props.item.id) {
-            return
+  return <>
+    <div>
+      <LabelRenderer {...props} />
+      <Renderer type={_type} name={_id} >
+        {({ field, form }) => {
+
+          const onValueChanged = (value, params) => {
+            const {
+              resetItems = false
+            } = params ? params : {}
+            //console.log('onValueChanged', value)
+            if (!props.item.id) {
+              return
+            }
+            const { item: { id }, setFieldValue, setFieldTouched } = props
+
+            props._onValueChanged && props._onValueChanged({ id, value })
+
+            !resetItems && setFieldValue(id, value, true)
+            !resetItems && setFieldTouched(id, true, false)
           }
-          const { item: { id }, setFieldValue, setFieldTouched } = props
 
-          props._onValueChanged && props._onValueChanged({ id, value })
-
-          !resetItems && setFieldValue(id, value, true)
-          !resetItems && setFieldTouched(id, true, false)
-        }
-
-        const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
-        const readOnly = props.readOnly || (props.props && props.props.readOnly)
-        return <div>
-          <Component
-            {...props}
-            disabled={disabled}
-            readOnly={readOnly}
-            value={props.values[id]}
-            error={props.errors[id]}
-            field={field}
-            form={form}
-            onValueChanged={onValueChanged} />
-          {(!hideErrors && id)
-            ? <div className="
-            my-2
-            mb-4
-            px-2
-            rounded-b-lg">
-              <ErrorMessage
-                name={_id}
-                component="div"
-                className="text-sm text-pink-600" />
-            </div>
-            : null}
-        </div>
-      }}
-    </Renderer>
-  </div>
+          const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
+          const readOnly = props.readOnly || (props.props && props.props.readOnly)
+          return <div>
+            <Component
+              {...props}
+              disabled={disabled}
+              readOnly={readOnly}
+              value={props.values[id]}
+              error={props.errors[id]}
+              field={field}
+              form={form}
+              onValueChanged={onValueChanged} />
+            {(!hideErrors && id)
+              ? <div className={"error-message-wrapper"}>
+                <ErrorMessage
+                  name={_id}
+                  component="div"
+                  className={"error-message"} />
+              </div>
+              : null}
+          </div>
+        }}
+      </Renderer>
+    </div>
+    <style jsx>{`
+      .error-message-wrapper {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem; 
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem; 
+        margin-bottom: 1rem; 
+        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem; 
+      }
+      .error-message {
+        margin-top: 1.5rem;
+        text-align: center;
+        color: #DC2626;
+      }
+    `}</style>
+  </>
 }

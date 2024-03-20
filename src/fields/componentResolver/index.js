@@ -1,8 +1,16 @@
 export default (props) => {
-  const { componentsLibraries = [() => null], item, cache, index, entry } = props
-
+  const {
+    item,
+    cache,
+    index,
+    entry
+  } = props
+  let _components = props.components ? props.components : props.componentsLibraries
+  if (!_components) {
+    _components = [() => null]
+  }
   let type = null
-  let typer = item.type
+  let typer = item.component ? item.component : item.type
   if (typeof typer === 'function') {
     type = typer({ index, entry })
   } else {
@@ -20,8 +28,8 @@ export default (props) => {
     }
   }
 
-  for (var i = 0; i < componentsLibraries.length; i++) {
-    const library = componentsLibraries[i]
+  for (var i = 0; i < _components.length; i++) {
+    const library = _components[i]
     if (!library) {
       continue
     }

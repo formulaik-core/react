@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
 import Add from './chunks/add'
@@ -34,7 +34,7 @@ export default (props) => {
 
   let AddComponent = componentResolver({
     ...props,
-    componentsLibraries: props.componentsLibraries,
+    components: props.components,
     item: add
   })
 
@@ -116,7 +116,7 @@ export default (props) => {
 
                 const Component = componentResolver({
                   ...props,
-                  componentsLibraries: props.componentsLibraries,
+                  components: props.components,
                   item: params,
                   index,
                   entry
@@ -128,7 +128,7 @@ export default (props) => {
 
                 let ContainerComponent = componentResolver({
                   ...props,
-                  componentsLibraries: props.componentsLibraries,
+                  components: props.components,
                   item: container,
                   index,
                   entry
