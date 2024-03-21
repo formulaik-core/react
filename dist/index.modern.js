@@ -111,19 +111,32 @@ var componentResolver = (function (props) {
   return null;
 });
 
+var PlatformButton = (function (props) {
+  var children = props.children;
+  return /*#__PURE__*/React.createElement("button", props, children);
+});
+
+var PlatformContainer = (function (props) {
+  var children = props.children;
+  return /*#__PURE__*/React.createElement("div", props, children);
+});
+
 var AddButton = (function (_ref) {
   var onAdd = _ref.onAdd,
       title = _ref.title,
       disabled = _ref.disabled;
-  return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "container"
-  }, /*#__PURE__*/React.createElement("button", {
+  return /*#__PURE__*/React.createElement(PlatformContainer, {
+    style: {
+      "display": "flex",
+      "marginTop": "2.5rem",
+      "marginBottom": "2.5rem",
+      "justifyContent": "center"
+    }
+  }, /*#__PURE__*/React.createElement(PlatformButton, {
     disabled: disabled,
     type: "button",
     onClick: onAdd
-  }, title ? title : "Add")), /*#__PURE__*/React.createElement("style", {
-    jsx: true
-  }, "      \n      .container {\n        /* flex justify-center my-10 */\n        display: flex; \n        margin-top: 2.5rem;\n        margin-bottom: 2.5rem; \n        justify-content: center; \n      }      \n    "));
+  }, title ? title : "Add"));
 });
 
 function createCommonjsModule(fn, module) {
@@ -27002,11 +27015,18 @@ var render$1 = (function (props) {
   };
 
   var Renderer = isDependant ? Field : FastField;
-  return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React$1.createElement(React$1.Fragment, null, /*#__PURE__*/React$1.createElement(PlatformContainer, {
     "data-id": "array-container"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React$1.createElement(PlatformContainer, {
     "data-id": "array-container-content",
-    className: "container-content " + (props.item.isHorizontal ? 'container-content-horizontal' : '')
+    style: _extends({
+      overflowX: "scroll",
+      width: "100%"
+    }, props.item.isHorizontal && {
+      "display": "flex",
+      "paddingBottom": "2rem",
+      "gap": "0.5rem"
+    })
   }, items && items.length > 0 && items.map(function (entry, index) {
     var itemId = id + "." + index;
     var ContainerComponent = componentResolver(_extends({}, props, {
@@ -27019,7 +27039,7 @@ var render$1 = (function (props) {
     if (!ContainerComponent) {
       ContainerComponent = function ContainerComponent(_ref2) {
         var children = _ref2.children;
-        return /*#__PURE__*/React.createElement("div", null, children);
+        return /*#__PURE__*/React$1.createElement(PlatformContainer, null, children);
       };
     }
 
@@ -27034,11 +27054,11 @@ var render$1 = (function (props) {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return /*#__PURE__*/React$1.createElement(PlatformContainer, {
       "data-id": "array-container-content-entry",
       key: index,
-      className: "form-control " + (!props.item.isHorizontal ? '' : '') + "  " + className
-    }, /*#__PURE__*/React.createElement(Renderer, {
+      className: "form-control " + className
+    }, /*#__PURE__*/React$1.createElement(Renderer, {
       "data-id": "array-renderer",
       className: 'renderer',
       type: params.type,
@@ -27160,7 +27180,7 @@ var render$1 = (function (props) {
           return null;
         }
 
-        return undefined( /*#__PURE__*/React.createElement(ContainerComponent, _extends({}, container, props.item, {
+        return undefined( /*#__PURE__*/React$1.createElement(ContainerComponent, _extends({}, container, props.item, {
           className: containerClassName(),
           arrayHelpers: arrayHelpers,
           onMoveDownRequired: onMoveDownRequired,
@@ -27174,14 +27194,14 @@ var render$1 = (function (props) {
           value: entry,
           containerProps: containersProps[itemId],
           onContainerPropsChanged: onContainerPropsChanged
-        }), /*#__PURE__*/React.createElement(Component, _extends({}, adaptedProps, {
+        }), /*#__PURE__*/React$1.createElement(Component, _extends({}, adaptedProps, {
           disabled: disabled,
           readOnly: readOnly,
           value: entry,
           onValueChanged: onEntryValuesChanged
         }))), portalContainer);
       } else {
-        return /*#__PURE__*/React.createElement(ContainerComponent, _extends({}, container, props.item, {
+        return /*#__PURE__*/React$1.createElement(ContainerComponent, _extends({}, container, props.item, {
           className: containerClassName(),
           arrayHelpers: arrayHelpers,
           onMoveDownRequired: onMoveDownRequired,
@@ -27195,14 +27215,14 @@ var render$1 = (function (props) {
           value: entry,
           containerProps: containersProps[itemId],
           onContainerPropsChanged: onContainerPropsChanged
-        }), /*#__PURE__*/React.createElement(Component, _extends({}, adaptedProps, {
+        }), /*#__PURE__*/React$1.createElement(Component, _extends({}, adaptedProps, {
           disabled: disabled,
           readOnly: readOnly,
           value: entry,
           onValueChanged: onEntryValuesChanged
         })));
       }
-    }), !hideErrors ? /*#__PURE__*/React.createElement(ErrorMessage$1, {
+    }), !hideErrors ? /*#__PURE__*/React$1.createElement(ErrorMessage$1, {
       name: itemId,
       component: "div",
       className: "error-message"
@@ -27213,21 +27233,21 @@ var render$1 = (function (props) {
         return null;
       }
 
-      return undefined( /*#__PURE__*/React.createElement(AddComponent, {
+      return undefined( /*#__PURE__*/React$1.createElement(AddComponent, {
         onAdd: onAdd,
         title: add.title,
         disabled: items.length >= props.item.maxItems
       }), add.portalContainer.current);
     }
 
-    return /*#__PURE__*/React.createElement(AddComponent, {
+    return /*#__PURE__*/React$1.createElement(AddComponent, {
       onAdd: onAdd,
       title: add.title,
       disabled: items.length >= props.item.maxItems
     });
-  }()), /*#__PURE__*/React.createElement("style", {
+  }()), /*#__PURE__*/React$1.createElement("style", {
     jsx: true
-  }, "      \n      .container-content {\n        /* w-full overflow-x-scroll */\n        overflow-x: scroll; \n        width: 100%; \n      }\n      .container-content-horizontal {\n        /* flex gap-2 pb-8 */\n        display: flex; \n        padding-bottom: 2rem; \n        gap: 0.5rem; \n      }\n      .renderer {\n        padding: 0.5rem; \n      }\n      .error-message {\n        /* text-sm text-red-600 pt-2 */\n        padding-top: 0.5rem; \n        font-size: 0.875rem;\n        line-height: 1.25rem; \n        color: #DC2626;\n      }\n    "));
+  }, "      \n      \n      .renderer {\n        padding: 0.5rem; \n      }\n      .error-message {\n        /* text-sm text-red-600 pt-2 */\n        padding-top: 0.5rem; \n        font-size: 0.875rem;\n        line-height: 1.25rem; \n        color: #DC2626;\n      }\n    "));
 });
 
 var ErrorMessage = (function (_ref) {
@@ -27243,6 +27263,11 @@ var ErrorMessage = (function (_ref) {
   });
 });
 
+var PlatformText = (function (props) {
+  var children = props.children;
+  return /*#__PURE__*/React.createElement("p", props, children);
+});
+
 var LabelRenderer = (function (props) {
   var _props$item = props.item,
       label = _props$item.label,
@@ -27252,11 +27277,11 @@ var LabelRenderer = (function (props) {
     return null;
   }
 
-  return /*#__PURE__*/React$1.createElement("div", {
-    className: "mb-2"
-  }, /*#__PURE__*/React$1.createElement("p", {
-    className: ""
-  }, label));
+  return /*#__PURE__*/React$1.createElement(React$1.Fragment, null, /*#__PURE__*/React$1.createElement(PlatformContainer, {
+    style: {
+      marginBottom: "0.5rem"
+    }
+  }, /*#__PURE__*/React$1.createElement(PlatformText, null, label)));
 });
 
 var ArrayField = (function (props) {
@@ -27270,10 +27295,10 @@ var ArrayField = (function (props) {
 
   var _type = input ? input : type;
 
-  return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React$1.createElement(React$1.Fragment, null, /*#__PURE__*/React$1.createElement(PlatformContainer, {
     className: "" + className,
     "data-id": "array-index"
-  }, /*#__PURE__*/React.createElement(LabelRenderer, props), /*#__PURE__*/React.createElement(FieldArray, {
+  }, /*#__PURE__*/React$1.createElement(LabelRenderer, props), /*#__PURE__*/React$1.createElement(FieldArray, {
     type: _type,
     name: id,
     component: function component(arrayHelpers) {
@@ -27281,11 +27306,11 @@ var ArrayField = (function (props) {
         arrayHelpers: arrayHelpers
       }));
     }
-  }), !hideErrors ? /*#__PURE__*/React.createElement(ErrorMessage, {
+  }), !hideErrors ? /*#__PURE__*/React$1.createElement(ErrorMessage, {
     name: id,
     component: "div",
     className: "error-message"
-  }) : null), /*#__PURE__*/React.createElement("style", {
+  }) : null), /*#__PURE__*/React$1.createElement("style", {
     jsx: true
   }, "      \n      .error-message {\n        padding-top: 0.5rem; \n        font-size: 0.875rem;\n        line-height: 1.25rem; \n        color: #DC2626;\n      }\n    "));
 });
@@ -27312,7 +27337,11 @@ var SingleField = (function (props) {
   var _id = id ? id : nanoid();
 
   var Renderer = isDependant ? Field : FastField;
-  return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(LabelRenderer, props), /*#__PURE__*/React.createElement(Renderer, {
+  return /*#__PURE__*/React$1.createElement(React$1.Fragment, null, /*#__PURE__*/React$1.createElement(PlatformContainer, {
+    style: {
+      marginBottom: "1rem"
+    }
+  }, /*#__PURE__*/React$1.createElement(LabelRenderer, props), /*#__PURE__*/React$1.createElement(Renderer, {
     type: _type,
     name: _id
   }, function (_ref) {
@@ -27341,7 +27370,7 @@ var SingleField = (function (props) {
 
     var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
     var readOnly = props.readOnly || props.props && props.props.readOnly;
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Component, _extends({}, props, {
+    return /*#__PURE__*/React$1.createElement("div", null, /*#__PURE__*/React$1.createElement(Component, _extends({}, props, {
       disabled: disabled,
       readOnly: readOnly,
       value: props.values[id],
@@ -27349,16 +27378,23 @@ var SingleField = (function (props) {
       field: field,
       form: form,
       onValueChanged: onValueChanged
-    })), !hideErrors && id ? /*#__PURE__*/React.createElement("div", {
-      className: "error-message-wrapper"
-    }, /*#__PURE__*/React.createElement(ErrorMessage$1, {
+    })), !hideErrors && id && /*#__PURE__*/React$1.createElement(PlatformContainer, {
+      style: {
+        paddingLeft: "0.5rem",
+        paddingRight: "0.5rem",
+        marginTop: "0.5rem",
+        marginBottom: "1rem",
+        borderBottomRightRadius: "0.5rem",
+        borderBottomLeftRadius: "0.5rem"
+      }
+    }, /*#__PURE__*/React$1.createElement(ErrorMessage$1, {
       name: _id,
       component: "div",
       className: "error-message"
-    })) : null);
-  })), /*#__PURE__*/React.createElement("style", {
+    })));
+  })), /*#__PURE__*/React$1.createElement("style", {
     jsx: true
-  }, "\n      .error-message-wrapper {\n        padding-left: 0.5rem;\n        padding-right: 0.5rem; \n        margin-top: 0.5rem;\n        margin-bottom: 0.5rem; \n        margin-bottom: 1rem; \n        border-bottom-right-radius: 0.5rem;\n        border-bottom-left-radius: 0.5rem; \n      }\n      .error-message {\n        margin-top: 1.5rem;\n        text-align: center;\n        color: #DC2626;\n      }\n    "));
+  }, "   \n      .error-message {\n        margin-top: 1.5rem;\n        text-align: center;\n        color: #DC2626;\n      }\n    "));
 });
 
 var fields = (function (props) {
@@ -27560,7 +27596,10 @@ var index = (function (props) {
       _props$readOnly = props.readOnly,
       readOnly = _props$readOnly === void 0 ? false : _props$readOnly,
       children = props.children;
-  var initialValues = typeof props.initialValues !== 'function' ? props.initialValues : props.initialValues && props.initialValues();
+
+  var _initialValues = props.initialValues ? props.initialValues : props.values;
+
+  var initialValues = typeof _initialValues !== 'function' ? _initialValues : props.initialValues && _initialValues();
   var validationSchema = null;
 
   if (props.validationSchema) {
@@ -27633,9 +27672,12 @@ var index = (function (props) {
       readOnly: readOnly,
       hideErrors: hideErrors
     }));
-  }), children, error && /*#__PURE__*/React$1.createElement("div", {
-    className: "mt-6 text-customc-main text-center"
-  }, /*#__PURE__*/React$1.createElement("label", null, error.message)));
+  }), children, error && /*#__PURE__*/React$1.createElement(PlatformContainer, {
+    style: {
+      marginTop: "1.5rem",
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React$1.createElement(PlatformText, null, error.message)));
 });
 
 export default index;
