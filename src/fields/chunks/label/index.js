@@ -1,4 +1,6 @@
 import React from 'react'
+import PlatformText from '../../../platform/text'
+import PlatformContainer from '../../../platform/container'
 
 export default (props) => {
     const { label, hideLabel } = props.item
@@ -6,7 +8,13 @@ export default (props) => {
         return null
     }
 
-    return <div className="mb-2">
-        <p className="">{label}</p>
-    </div>
+    return <React.Fragment>
+        <PlatformContainer
+            style={{
+                marginBottom: "0.5rem",
+            }}
+        >
+            <PlatformText>{label}</PlatformText>
+        </PlatformContainer>
+    </React.Fragment>
 }

@@ -4,6 +4,8 @@ import render from './render'
 import ErrorMessage from './errorMessage'
 import LabelRenderer from '../chunks/label'
 
+import PlatformContainer from '../../platform/container'
+
 export default (props) => {
   const {
     item: {
@@ -18,7 +20,9 @@ export default (props) => {
   const _type = input ? input : type
 
   return <React.Fragment>
-    <div className={`${className}`} data-id='array-index'>
+    <PlatformContainer
+      className={`${className}`}
+      data-id='array-index'>
       <LabelRenderer {...props} />
       <FieldArray
         type={_type}
@@ -39,7 +43,7 @@ export default (props) => {
           name={id}
           component="div"
           className={"error-message"} /> : null}
-    </div>
+    </PlatformContainer>
     <style jsx>{`      
       .error-message {
         padding-top: 0.5rem; 

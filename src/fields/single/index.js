@@ -3,6 +3,7 @@ import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
 import LabelRenderer from '../chunks/label'
+import PlatformContainer from '../../platform/container'
 
 export default (props) => {
   const { item: {
@@ -28,7 +29,11 @@ export default (props) => {
 
 
   return <React.Fragment>
-    <div>
+    <PlatformContainer
+      style={{
+        marginBottom: "1rem",
+      }}
+    >
       <LabelRenderer {...props} />
       <Renderer type={_type} name={_id} >
         {({ field, form }) => {
@@ -62,27 +67,28 @@ export default (props) => {
               form={form}
               onValueChanged={onValueChanged} />
             {(!hideErrors && id)
-              ? <div className={"error-message-wrapper"}>
+              && <PlatformContainer
+                style={
+                  {
+                    paddingLeft: "0.5rem",
+                    paddingRight: "0.5rem",
+                    marginTop: "0.5rem",
+                    marginBottom: "1rem",
+                    borderBottomRightRadius: "0.5rem",
+                    borderBottomLeftRadius: "0.5rem"
+                  }
+                }
+              >
                 <ErrorMessage
                   name={_id}
                   component="div"
                   className={"error-message"} />
-              </div>
-              : null}
+              </PlatformContainer>}
           </div>
         }}
       </Renderer>
-    </div>
-    <style jsx>{`
-      .error-message-wrapper {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem; 
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem; 
-        margin-bottom: 1rem; 
-        border-bottom-right-radius: 0.5rem;
-        border-bottom-left-radius: 0.5rem; 
-      }
+    </PlatformContainer>
+    <style jsx>{`   
       .error-message {
         margin-top: 1.5rem;
         text-align: center;

@@ -3,6 +3,8 @@ import { Formik } from 'formik'
 import fields from './fields'
 import FormulaikCache from './cache'
 import yupFromSchema from './lib/yupFromSchema.js'
+import PlatformContainer from './platform/container'
+import PlatformText from './platform/text'
 
 export default (props) => {
   const {
@@ -89,8 +91,11 @@ export default (props) => {
     </Formik>
     {children}
     {error &&
-      <div className="mt-6 text-customc-main text-center">
-        <label>{error.message}</label>
-      </div>}
+      <PlatformContainer style={{
+        marginTop: "1.5rem",
+        textAlign: "center"
+      }}>
+        <PlatformText>{error.message}</PlatformText>
+      </PlatformContainer>}
   </React.Fragment>
 } 

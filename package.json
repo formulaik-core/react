@@ -74,13 +74,13 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "formik": "^2.2.9",
-    "nanoid": "^3.2.0",
+    "formik": ">=2.2.9",
     "react": ">= 0.16.0 < 18.0.0"
   },
   "dependencies": {
     "@loadable/component": "^5.15.2",
-    "schema-to-yup": "^1.12.18"
+    "schema-to-yup": "^1.12.18",
+    "nanoid": "^3.2.0"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.10.2",
