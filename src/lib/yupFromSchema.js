@@ -10,7 +10,7 @@ export default ({ inputs }) => {
         required: [],
     }
 
-    const validatableInputs = inputs.filter(a => (a && a.validation))
+    const validatableInputs = inputs.filter(a => (a && a.validations))
     const config = {
         errMessages: {}
     }
@@ -18,15 +18,15 @@ export default ({ inputs }) => {
     for (var i in validatableInputs) {
         const validatableInput = validatableInputs[i]
 
-        delete validatableInput.validation.messages
-        const keys = Object.keys(validatableInput.validation)
+        const { validations } = validatableInput
         const properties = {}
         const messages = {}
 
-        for (var j in keys) {
-            const key = keys[j]
-            properties[key] = validatableInput.validation[key].value
-            messages[key] = validatableInput.validation[key].message
+        for (var j in validations) {
+            const validation = validations[j]
+            const { kind } = validation
+            properties[kind] = validation.value
+            messages[kind] = validation.message
         }
 
         schema.properties[validatableInput.id] = {
@@ -34,7 +34,7 @@ export default ({ inputs }) => {
             ...properties
         }
 
-        if (validatableInput.validation.required) {
+        if (properties.required) {
             schema.required.push(validatableInput.id)
         }
 
