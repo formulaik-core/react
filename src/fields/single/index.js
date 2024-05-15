@@ -3,7 +3,7 @@ import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
 import LabelRenderer from '../chunks/label'
-import PlatformContainer from '../../platform/container/index.native'
+import PlatformContainer from '../../platform/container/index.js'
 
 export default (props) => {
   const { item: {

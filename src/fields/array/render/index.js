@@ -3,7 +3,7 @@ import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
 import AddButton from './chunks/add'
 import * as ReactDOM from 'react-dom'
-import PlatformContainer from '../../../platform/container/index.native'
+import PlatformContainer from '../../../platform/container/index.js'
 import React from 'react'
 
 export default (props) => {
