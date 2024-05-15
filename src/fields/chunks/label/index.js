@@ -1,6 +1,6 @@
 import React from 'react'
 import PlatformText from '../../../platform/text'
-import PlatformContainer from '../../../platform/container'
+import PlatformContainer from '../../../platform/container/index.native'
 
 export default (props) => {
     const { label, hideLabel } = props.item

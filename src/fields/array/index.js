@@ -4,7 +4,7 @@ import render from './render'
 import ErrorMessage from './errorMessage'
 import LabelRenderer from '../chunks/label'
 
-import PlatformContainer from '../../platform/container'
+import PlatformContainer from '../../platform/container/index.native'
 
 export default (props) => {
   const {
@@ -44,11 +44,11 @@ export default (props) => {
           component="div"
           className={"error-message"} /> : null}
     </PlatformContainer>
-    <style jsx>{`      
+    <style jsx>{`
       .error-message {
-        padding-top: 0.5rem; 
+        padding-top: 0.5rem;
         font-size: 0.875rem;
-        line-height: 1.25rem; 
+        line-height: 1.25rem;
         color: #DC2626;
       }
     `}</style>

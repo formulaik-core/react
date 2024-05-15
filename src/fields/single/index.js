@@ -3,7 +3,7 @@ import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
 import LabelRenderer from '../chunks/label'
-import PlatformContainer from '../../platform/container'
+import PlatformContainer from '../../platform/container/index.native'
 
 export default (props) => {
   const { item: {
@@ -88,7 +88,7 @@ export default (props) => {
         }}
       </Renderer>
     </PlatformContainer>
-    <style jsx>{`   
+    <style jsx>{`
       .error-message {
         margin-top: 1.5rem;
         text-align: center;

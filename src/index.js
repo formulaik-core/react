@@ -3,8 +3,8 @@ import { Formik } from 'formik'
 import fields from './fields'
 import FormulaikCache from './cache'
 import yupFromSchema from './lib/yupFromSchema.js'
-import PlatformContainer from './platform/container'
-import PlatformText from './platform/text'
+import PlatformContainer from './platform/container/index.js'
+import PlatformText from './platform/text/index.js'
 
 export default (props) => {
   const {
@@ -98,4 +98,4 @@ export default (props) => {
         <PlatformText>{error.message}</PlatformText>
       </PlatformContainer>}
   </React.Fragment>
-} 
+}

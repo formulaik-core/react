@@ -5,6 +5,7 @@ import Add from './chunks/add'
 import * as ReactDOM from 'react-dom'
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 
+import React from 'react'
 
 export default (props) => {
   const {
@@ -104,7 +105,7 @@ export default (props) => {
               ref={provided.innerRef}
               // style={getListStyle(snapshot.isDraggingOver)}
               className={`
-                p-2 
+                p-2
                 bg-red-100
                 transition-all
                 ease-in-out
