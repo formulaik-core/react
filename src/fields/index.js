@@ -1,13 +1,13 @@
 import React from 'react'
-import { Form } from 'formik'
 import ArrayField from './array'
 import SingleField from './single'
 import * as ReactDOM from 'react-dom'
+import PlatformForm from '../platform/form/index.js'
 
 export default (props) => {
   const { inputs } = props
   const items = Array.isArray(inputs) ? inputs : inputs()
-  return <Form>
+  return <PlatformForm>
     {
       items.map(item => {
         const { isMulti } = item
@@ -18,7 +18,7 @@ export default (props) => {
         return renderItem({ ...props, item, })
       })
     }
-  </Form>
+  </PlatformForm>
 }
 
 const renderMultiItems = (props) => {
