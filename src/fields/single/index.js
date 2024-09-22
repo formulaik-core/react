@@ -27,7 +27,6 @@ export default (props) => {
   const _id = id ? id : nanoid()
   const Renderer = isDependant ? Field : FastField
 
-
   return <React.Fragment>
     <PlatformContainer
       style={{
@@ -56,7 +55,7 @@ export default (props) => {
 
           const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
           const readOnly = props.readOnly || (props.props && props.props.readOnly)
-          return <div>
+          return <div key={_id}>
             <Component
               {...props}
               disabled={disabled}

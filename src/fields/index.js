@@ -4,7 +4,6 @@ import ArrayField from './array'
 import SingleField from './single'
 import * as ReactDOM from 'react-dom'
 
-
 export default (props) => {
   const { inputs } = props
   const items = Array.isArray(inputs) ? inputs : inputs()
