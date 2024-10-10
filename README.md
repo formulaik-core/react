@@ -31,37 +31,60 @@ Create your inputs and create the form using formulaik:
 
 ```jsx
 import Formulaik from '@formulaik/react'
-import FormulaikPaper from '@formulaik-community/react-native-paper'
-import { Text } from 'react-native'
+import FormulaikMui from '@formulaik-community/formulaik-mui-react'
 
 const inputs = [
-  {
-    type: 'input',
-    schema: 'email',
-    id: 'email',
-    label: 'Email',
-    params: {
-      type: 'email',
-      placeholder: "email@domain.com"
-    }
-  },
-  {
-    type: 'inputPassword',
-    schema: 'password',
-    label: 'Password',
-    id: 'password',
-    params: {
-      type: 'password',
-      autoComplete: "current-password",
-      placeholder: "xxxx-xxxx-xxxx"
-    }
-  },
-  {
-    type: 'submit',
-    params: {
-      text: 'Continue'
-    }
-  },
+ {
+      component: 'input',
+      id: 'email',
+      label: 'Email',
+      type: "string",
+      params: {
+        type: 'email',
+        placeholder: "email@domain.com"
+      },
+      validations: [
+        {
+          kind: "format",
+          value: "email",
+          message: 'Invalid email format',
+        },
+        {
+          kind: "required",
+          value: true,
+          message: "This field can't be blank",
+        },
+      ],
+    },
+    {
+      component: 'inputPassword',
+      label: 'Password',
+      id: 'password',
+      type: "string",
+      params: {
+        autoComplete: "current-password",
+        placeholder: "xxxx-xxxx-xxxx"
+      },
+      validations: [
+        {
+          kind: "required",
+          value: true,
+          message: "This field can't be blank",
+        },
+        {
+          kind: "matches",
+          value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+          message: 'Invalid password, must contain at least 8 characters and at most 18 characters',
+        },
+      ]
+    },
+    {
+      component: 'submit',
+      id: 'submit',
+      params: {
+        text: 'Continue'
+      }
+    },
 ]
 
 export default (props) => {
@@ -81,9 +104,9 @@ export default (props) => {
   }
 
   return <>
-      <Text>Login</Text>
+      <h3>Login</h3>
       <Formulaik
-        components={[FormulaikPaper]}
+        components={[FormulaikMui]}
         values={values}
         inputs={inputs}
         onSubmit={onSubmit}
@@ -115,26 +138,3 @@ MIT © [yelounak](https://github.com/yelounak)
 - [Getting started with Formulaik React 🚀](https://formulaik-core.github.io/documentation/docs/next/gettingstarted/react/installation)
 - [Contribute to Formulaik](https://formulaik-core.github.io/documentation/docs/next/contributing)
 - [Forumaik Blog](https://adoucoure.com/formulaik)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

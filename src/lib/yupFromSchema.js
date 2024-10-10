@@ -1,47 +1,42 @@
 import { buildYup } from 'schema-to-yup'
-// import { buildYup as buildYup2 } from 'json-schema-to-yup'
 
 export default ({ inputs }) => {
 
-    const schema = {
-        $schema: "http://json-schema.org/draft-07/schema#",
-        type: "object",
-        properties: {},
-        required: [],
+  const schema = {
+    $schema: "http://json-schema.org/draft-07/schema#",
+    type: "object",
+    properties: {},
+    required: [],
+  }
+
+  const validatableInputs = inputs.filter(a => (a && a.validations))
+  const config = {
+    errMessages: {}
+  }
+
+  for (const input of validatableInputs) {
+    const { validations } = input
+    const properties = {}
+    const messages = {}
+
+    for (const validation of validations) {
+      const { kind } = validation
+      properties[kind] = validation.value
+      messages[kind] = validation.message
     }
 
-    const validatableInputs = inputs.filter(a => (a && a.validations))
-    const config = {
-        errMessages: {}
+    schema.properties[input.id] = {
+      type: input.type ? input.type : 'string',
+      ...properties
     }
 
-    for (var i in validatableInputs) {
-        const validatableInput = validatableInputs[i]
-
-        const { validations } = validatableInput
-        const properties = {}
-        const messages = {}
-
-        for (var j in validations) {
-            const validation = validations[j]
-            const { kind } = validation
-            properties[kind] = validation.value
-            messages[kind] = validation.message
-        }
-
-        schema.properties[validatableInput.id] = {
-            type: validatableInput.type,
-            ...properties
-        }
-
-        if (properties.required) {
-            schema.required.push(validatableInput.id)
-        }
-
-        config.errMessages[validatableInput.id] = messages
+    if (properties.required) {
+      schema.required.push(input.id)
     }
 
-    const yupSchema = buildYup(schema, config)
-    // const yu = buildYup2(schema, config)
-    return yupSchema
+    config.errMessages[input.id] = messages
+  }
+
+  const yupSchema = buildYup(schema, config)
+  return yupSchema
 }

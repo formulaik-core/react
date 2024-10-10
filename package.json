@@ -39,27 +39,11 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "size-limit": [
-    {
-      "path": "dist/index.js",
-      "limit": "600 KB"
-    },
-    {
-      "path": "dist/index.modern.js",
-      "limit": "600 KB"
-    },
-    {
-      "path": "dist/index.umd.js",
-      "limit": "600 KB"
-    }
-  ],
   "scripts": {
     "test_": "echo \"Error: no test specified\" && exit 1",
     "semantic-release": "semantic-release",
     "acp": "git add . && npm run commit && git push",
     "commit": "git-cz",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepare_": "run-s build",
     "test": "run-s test:unit test:lint test:build",
@@ -74,15 +58,14 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "formik": ">=2.2.9",
-    "react": ">= 0.16.0 < 18.0.0"
+    "react": ">= 0.16.0"
   },
   "dependencies": {
     "schema-to-yup": "^1.12.18",
-    "nanoid": "^3.2.0"
+    "nanoid": "^3.2.0",
+    "formik": ">=2.4.6"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.10.2",
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.2",
     "cz-conventional-changelog": "^3.3.0",
@@ -106,7 +89,6 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
-    "semantic-release": "^22.0.7",
-    "size-limit": "^4.10.2"
+    "semantic-release": "^22.0.7"
   }
 }

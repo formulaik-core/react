@@ -1,7 +1,7 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var React$1 = require('react');
-var React$1__default = _interopDefault(React$1);
+var React = require('react');
+var React__default = _interopDefault(React);
 var formik = require('formik');
 var nanoid = require('nanoid');
 var schemaToYup = require('schema-to-yup');
@@ -41,6 +41,63 @@ function _extends() {
   };
 
   return _extends.apply(this, arguments);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _createForOfIteratorHelperLoose(o, allowArrayLike) {
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+  if (it) return (it = it.call(o)).next.bind(it);
+
+  if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+    if (it) o = it;
+    var i = 0;
+    return function () {
+      if (i >= o.length) return {
+        done: true
+      };
+      return {
+        done: false,
+        value: o[i++]
+      };
+    };
+  }
+
+  throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+// A type of promise-like that resolves synchronously and supports only one observer
+
+const _iteratorSymbol = /*#__PURE__*/ typeof Symbol !== "undefined" ? (Symbol.iterator || (Symbol.iterator = Symbol("Symbol.iterator"))) : "@@iterator";
+
+const _asyncIteratorSymbol = /*#__PURE__*/ typeof Symbol !== "undefined" ? (Symbol.asyncIterator || (Symbol.asyncIterator = Symbol("Symbol.asyncIterator"))) : "@@asyncIterator";
+
+// Asynchronously call a function and send errors to recovery continuation
+function _catch(body, recover) {
+	try {
+		var result = body();
+	} catch(e) {
+		return recover(e);
+	}
+	if (result && result.then) {
+		return result.then(void 0, recover);
+	}
+	return result;
 }
 
 var componentResolver = (function (props) {
@@ -116,26 +173,26 @@ var componentResolver = (function (props) {
 
 var PlatformButton = (function (props) {
   var children = props.children;
-  return /*#__PURE__*/React.createElement("button", props, children);
+  return /*#__PURE__*/React__default.createElement("button", props, children);
 });
 
 var PlatformContainer = (function (props) {
   var children = props.children;
-  return /*#__PURE__*/React.createElement("div", props, children);
+  return /*#__PURE__*/React__default.createElement("div", props, children);
 });
 
 var AddButton = (function (_ref) {
   var onAdd = _ref.onAdd,
       title = _ref.title,
       disabled = _ref.disabled;
-  return /*#__PURE__*/React.createElement(PlatformContainer, {
+  return /*#__PURE__*/React__default.createElement(PlatformContainer, {
     style: {
       "display": "flex",
       "marginTop": "2.5rem",
       "marginBottom": "2.5rem",
       "justifyContent": "center"
     }
-  }, /*#__PURE__*/React.createElement(PlatformButton, {
+  }, /*#__PURE__*/React__default.createElement(PlatformButton, {
     disabled: disabled,
     type: "button",
     onClick: onAdd
@@ -1109,7 +1166,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 });
 
-function u(a){for(var b="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=1;c<arguments.length;c++)b+="&args[]="+encodeURIComponent(arguments[c]);return "Minified React error #"+a+"; visit "+b+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}if(!React$1__default)throw Error(u(227));
+function u(a){for(var b="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=1;c<arguments.length;c++)b+="&args[]="+encodeURIComponent(arguments[c]);return "Minified React error #"+a+"; visit "+b+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}if(!React__default)throw Error(u(227));
 function ba(a,b,c,d,e,f,g,h,k){var l=Array.prototype.slice.call(arguments,3);try{b.apply(c,l);}catch(m){this.onError(m);}}var da=!1,ea=null,fa=!1,ha=null,ia={onError:function(a){da=!0;ea=a;}};function ja(a,b,c,d,e,f,g,h,k){da=!1;ea=null;ba.apply(ia,arguments);}function ka(a,b,c,d,e,f,g,h,k){ja.apply(this,arguments);if(da){if(da){var l=ea;da=!1;ea=null;}else throw Error(u(198));fa||(fa=!0,ha=l);}}var la=null,ma=null,na=null;
 function oa(a,b,c){var d=a.type||"unknown-event";a.currentTarget=na(c);ka(d,b,void 0,a);a.currentTarget=null;}var pa=null,qa={};
 function ra(){if(pa)for(var a in qa){var b=qa[a],c=pa.indexOf(a);if(!(-1<c))throw Error(u(96,a));if(!sa[c]){if(!b.extractEvents)throw Error(u(97,a));sa[c]=b;c=b.eventTypes;for(var d in c){var e=void 0;var f=c[d],g=b,h=d;if(ta.hasOwnProperty(h))throw Error(u(99,h));ta[h]=f;var k=f.phasedRegistrationNames;if(k){for(e in k)k.hasOwnProperty(e)&&ua(k[e],g,h);e=!0;}else f.registrationName?(ua(f.registrationName,g,h),e=!0):e=!1;if(!e)throw Error(u(98,d,a));}}}}
@@ -1123,7 +1180,7 @@ function Ta(a,b,c,d){if(null===b||"undefined"===typeof b||Sa(a,b,c,d))return !0;
 ["checked","multiple","muted","selected"].forEach(function(a){C[a]=new v(a,3,!0,a,null,!1);});["capture","download"].forEach(function(a){C[a]=new v(a,4,!1,a,null,!1);});["cols","rows","size","span"].forEach(function(a){C[a]=new v(a,6,!1,a,null,!1);});["rowSpan","start"].forEach(function(a){C[a]=new v(a,5,!1,a.toLowerCase(),null,!1);});var Ua=/[\-:]([a-z])/g;function Va(a){return a[1].toUpperCase()}
 "accent-height alignment-baseline arabic-form baseline-shift cap-height clip-path clip-rule color-interpolation color-interpolation-filters color-profile color-rendering dominant-baseline enable-background fill-opacity fill-rule flood-color flood-opacity font-family font-size font-size-adjust font-stretch font-style font-variant font-weight glyph-name glyph-orientation-horizontal glyph-orientation-vertical horiz-adv-x horiz-origin-x image-rendering letter-spacing lighting-color marker-end marker-mid marker-start overline-position overline-thickness paint-order panose-1 pointer-events rendering-intent shape-rendering stop-color stop-opacity strikethrough-position strikethrough-thickness stroke-dasharray stroke-dashoffset stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width text-anchor text-decoration text-rendering underline-position underline-thickness unicode-bidi unicode-range units-per-em v-alphabetic v-hanging v-ideographic v-mathematical vector-effect vert-adv-y vert-origin-x vert-origin-y word-spacing writing-mode xmlns:xlink x-height".split(" ").forEach(function(a){var b=a.replace(Ua,
 Va);C[b]=new v(b,1,!1,a,null,!1);});"xlink:actuate xlink:arcrole xlink:role xlink:show xlink:title xlink:type".split(" ").forEach(function(a){var b=a.replace(Ua,Va);C[b]=new v(b,1,!1,a,"http://www.w3.org/1999/xlink",!1);});["xml:base","xml:lang","xml:space"].forEach(function(a){var b=a.replace(Ua,Va);C[b]=new v(b,1,!1,a,"http://www.w3.org/XML/1998/namespace",!1);});["tabIndex","crossOrigin"].forEach(function(a){C[a]=new v(a,1,!1,a.toLowerCase(),null,!1);});
-C.xlinkHref=new v("xlinkHref",1,!1,"xlink:href","http://www.w3.org/1999/xlink",!0);["src","href","action","formAction"].forEach(function(a){C[a]=new v(a,1,!1,a.toLowerCase(),null,!0);});var Wa=React$1__default.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;Wa.hasOwnProperty("ReactCurrentDispatcher")||(Wa.ReactCurrentDispatcher={current:null});Wa.hasOwnProperty("ReactCurrentBatchConfig")||(Wa.ReactCurrentBatchConfig={suspense:null});
+C.xlinkHref=new v("xlinkHref",1,!1,"xlink:href","http://www.w3.org/1999/xlink",!0);["src","href","action","formAction"].forEach(function(a){C[a]=new v(a,1,!1,a.toLowerCase(),null,!0);});var Wa=React__default.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;Wa.hasOwnProperty("ReactCurrentDispatcher")||(Wa.ReactCurrentDispatcher={current:null});Wa.hasOwnProperty("ReactCurrentBatchConfig")||(Wa.ReactCurrentBatchConfig={suspense:null});
 function Xa(a,b,c,d){var e=C.hasOwnProperty(b)?C[b]:null;var f=null!==e?0===e.type:d?!1:!(2<b.length)||"o"!==b[0]&&"O"!==b[0]||"n"!==b[1]&&"N"!==b[1]?!1:!0;f||(Ta(b,c,e,d)&&(c=null),d||null===e?Ra(b)&&(null===c?a.removeAttribute(b):a.setAttribute(b,""+c)):e.mustUseProperty?a[e.propertyName]=null===c?3===e.type?!1:"":c:(b=e.attributeName,d=e.attributeNamespace,null===c?a.removeAttribute(b):(e=e.type,c=3===e||4===e&&!0===c?"":""+c,d?a.setAttributeNS(d,b,c):a.setAttribute(b,c))));}
 var Ya=/^(.*)[\\\/]/,E="function"===typeof Symbol&&Symbol.for,Za=E?Symbol.for("react.element"):60103,$a=E?Symbol.for("react.portal"):60106,ab=E?Symbol.for("react.fragment"):60107,bb=E?Symbol.for("react.strict_mode"):60108,cb=E?Symbol.for("react.profiler"):60114,db=E?Symbol.for("react.provider"):60109,eb=E?Symbol.for("react.context"):60110,fb=E?Symbol.for("react.concurrent_mode"):60111,gb=E?Symbol.for("react.forward_ref"):60112,hb=E?Symbol.for("react.suspense"):60113,ib=E?Symbol.for("react.suspense_list"):
 60120,jb=E?Symbol.for("react.memo"):60115,kb=E?Symbol.for("react.lazy"):60116,lb=E?Symbol.for("react.block"):60121,mb="function"===typeof Symbol&&Symbol.iterator;function nb(a){if(null===a||"object"!==typeof a)return null;a=mb&&a[mb]||a["@@iterator"];return "function"===typeof a?a:null}function ob(a){if(-1===a._status){a._status=0;var b=a._ctor;b=b();a._result=b;b.then(function(b){0===a._status&&(b=b.default,a._status=1,a._result=b);},function(b){0===a._status&&(a._status=2,a._result=b);});}}
@@ -1135,7 +1192,7 @@ null;delete a[b];}}}}function xb(a){a._valueTracker||(a._valueTracker=tb(a));}fu
 function Ab(a,b){var c=null==b.defaultValue?"":b.defaultValue,d=null!=b.checked?b.checked:b.defaultChecked;c=rb(null!=b.value?b.value:c);a._wrapperState={initialChecked:d,initialValue:c,controlled:"checkbox"===b.type||"radio"===b.type?null!=b.checked:null!=b.value};}function Bb(a,b){b=b.checked;null!=b&&Xa(a,"checked",b,!1);}
 function Cb(a,b){Bb(a,b);var c=rb(b.value),d=b.type;if(null!=c)if("number"===d){if(0===c&&""===a.value||a.value!=c)a.value=""+c;}else a.value!==""+c&&(a.value=""+c);else if("submit"===d||"reset"===d){a.removeAttribute("value");return}b.hasOwnProperty("value")?Db(a,b.type,c):b.hasOwnProperty("defaultValue")&&Db(a,b.type,rb(b.defaultValue));null==b.checked&&null!=b.defaultChecked&&(a.defaultChecked=!!b.defaultChecked);}
 function Eb(a,b,c){if(b.hasOwnProperty("value")||b.hasOwnProperty("defaultValue")){var d=b.type;if(!("submit"!==d&&"reset"!==d||void 0!==b.value&&null!==b.value))return;b=""+a._wrapperState.initialValue;c||b===a.value||(a.value=b);a.defaultValue=b;}c=a.name;""!==c&&(a.name="");a.defaultChecked=!!a._wrapperState.initialChecked;""!==c&&(a.name=c);}
-function Db(a,b,c){if("number"!==b||a.ownerDocument.activeElement!==a)null==c?a.defaultValue=""+a._wrapperState.initialValue:a.defaultValue!==""+c&&(a.defaultValue=""+c);}function Fb(a){var b="";React$1__default.Children.forEach(a,function(a){null!=a&&(b+=a);});return b}function Gb(a,b){a=objectAssign({children:void 0},b);if(b=Fb(b.children))a.children=b;return a}
+function Db(a,b,c){if("number"!==b||a.ownerDocument.activeElement!==a)null==c?a.defaultValue=""+a._wrapperState.initialValue:a.defaultValue!==""+c&&(a.defaultValue=""+c);}function Fb(a){var b="";React__default.Children.forEach(a,function(a){null!=a&&(b+=a);});return b}function Gb(a,b){a=objectAssign({children:void 0},b);if(b=Fb(b.children))a.children=b;return a}
 function Hb(a,b,c,d){a=a.options;if(b){b={};for(var e=0;e<c.length;e++)b["$"+c[e]]=!0;for(c=0;c<a.length;c++)e=b.hasOwnProperty("$"+a[c].value),a[c].selected!==e&&(a[c].selected=e),e&&d&&(a[c].defaultSelected=!0);}else {c=""+rb(c);b=null;for(e=0;e<a.length;e++){if(a[e].value===c){a[e].selected=!0;d&&(a[e].defaultSelected=!0);return}null!==b||a[e].disabled||(b=a[e]);}null!==b&&(b.selected=!0);}}
 function Ib(a,b){if(null!=b.dangerouslySetInnerHTML)throw Error(u(91));return objectAssign({},b,{value:void 0,defaultValue:void 0,children:""+a._wrapperState.initialValue})}function Jb(a,b){var c=b.value;if(null==c){c=b.children;b=b.defaultValue;if(null!=c){if(null!=b)throw Error(u(92));if(Array.isArray(c)){if(!(1>=c.length))throw Error(u(93));c=c[0];}b=c;}null==b&&(b="");c=b;}a._wrapperState={initialValue:rb(c)};}
 function Kb(a,b){var c=rb(b.value),d=rb(b.defaultValue);null!=c&&(c=""+c,c!==a.value&&(a.value=c),null==b.defaultValue&&a.defaultValue!==c&&(a.defaultValue=c));null!=d&&(a.defaultValue=""+d);}function Lb(a){var b=a.textContent;b===a._wrapperState.initialValue&&""!==b&&null!==b&&(a.value=b);}var Mb={html:"http://www.w3.org/1999/xhtml",mathml:"http://www.w3.org/1998/Math/MathML",svg:"http://www.w3.org/2000/svg"};
@@ -1227,7 +1284,7 @@ function yg(a,b){var c=a.alternate;null!==c&&vg(c,a);a=a.updateQueue;c=a.baseQue
 function zg(a,b,c,d){var e=a.updateQueue;tg=!1;var f=e.baseQueue,g=e.shared.pending;if(null!==g){if(null!==f){var h=f.next;f.next=g.next;g.next=h;}f=g;e.shared.pending=null;h=a.alternate;null!==h&&(h=h.updateQueue,null!==h&&(h.baseQueue=g));}if(null!==f){h=f.next;var k=e.baseState,l=0,m=null,p=null,x=null;if(null!==h){var z=h;do{g=z.expirationTime;if(g<d){var ca={expirationTime:z.expirationTime,suspenseConfig:z.suspenseConfig,tag:z.tag,payload:z.payload,callback:z.callback,next:null};null===x?(p=x=
 ca,m=k):x=x.next=ca;g>l&&(l=g);}else {null!==x&&(x=x.next={expirationTime:1073741823,suspenseConfig:z.suspenseConfig,tag:z.tag,payload:z.payload,callback:z.callback,next:null});Ag(g,z.suspenseConfig);a:{var D=a,t=z;g=b;ca=c;switch(t.tag){case 1:D=t.payload;if("function"===typeof D){k=D.call(ca,k,g);break a}k=D;break a;case 3:D.effectTag=D.effectTag&-4097|64;case 0:D=t.payload;g="function"===typeof D?D.call(ca,k,g):D;if(null===g||void 0===g)break a;k=objectAssign({},k,g);break a;case 2:tg=!0;}}null!==z.callback&&
 (a.effectTag|=32,g=e.effects,null===g?e.effects=[z]:g.push(z));}z=z.next;if(null===z||z===h)if(g=e.shared.pending,null===g)break;else z=f.next=g.next,g.next=h,e.baseQueue=f=g,e.shared.pending=null;}while(1)}null===x?m=k:x.next=p;e.baseState=m;e.baseQueue=x;Bg(l);a.expirationTime=l;a.memoizedState=k;}}
-function Cg(a,b,c){a=b.effects;b.effects=null;if(null!==a)for(b=0;b<a.length;b++){var d=a[b],e=d.callback;if(null!==e){d.callback=null;d=e;e=c;if("function"!==typeof d)throw Error(u(191,d));d.call(e);}}}var Dg=Wa.ReactCurrentBatchConfig,Eg=(new React$1__default.Component).refs;function Fg(a,b,c,d){b=a.memoizedState;c=c(d,b);c=null===c||void 0===c?b:objectAssign({},b,c);a.memoizedState=c;0===a.expirationTime&&(a.updateQueue.baseState=c);}
+function Cg(a,b,c){a=b.effects;b.effects=null;if(null!==a)for(b=0;b<a.length;b++){var d=a[b],e=d.callback;if(null!==e){d.callback=null;d=e;e=c;if("function"!==typeof d)throw Error(u(191,d));d.call(e);}}}var Dg=Wa.ReactCurrentBatchConfig,Eg=(new React__default.Component).refs;function Fg(a,b,c,d){b=a.memoizedState;c=c(d,b);c=null===c||void 0===c?b:objectAssign({},b,c);a.memoizedState=c;0===a.expirationTime&&(a.updateQueue.baseState=c);}
 var Jg={isMounted:function(a){return (a=a._reactInternalFiber)?dc(a)===a:!1},enqueueSetState:function(a,b,c){a=a._reactInternalFiber;var d=Gg(),e=Dg.suspense;d=Hg(d,a,e);e=wg(d,e);e.payload=b;void 0!==c&&null!==c&&(e.callback=c);xg(a,e);Ig(a,d);},enqueueReplaceState:function(a,b,c){a=a._reactInternalFiber;var d=Gg(),e=Dg.suspense;d=Hg(d,a,e);e=wg(d,e);e.tag=1;e.payload=b;void 0!==c&&null!==c&&(e.callback=c);xg(a,e);Ig(a,d);},enqueueForceUpdate:function(a,b){a=a._reactInternalFiber;var c=Gg(),d=Dg.suspense;
 c=Hg(c,a,d);d=wg(c,d);d.tag=2;void 0!==b&&null!==b&&(d.callback=b);xg(a,d);Ig(a,c);}};function Kg(a,b,c,d,e,f,g){a=a.stateNode;return "function"===typeof a.shouldComponentUpdate?a.shouldComponentUpdate(d,f,g):b.prototype&&b.prototype.isPureReactComponent?!bf(c,d)||!bf(e,f):!0}
 function Lg(a,b,c){var d=!1,e=Af;var f=b.contextType;"object"===typeof f&&null!==f?f=sg(f):(e=L(b)?Bf:J.current,d=b.contextTypes,f=(d=null!==d&&void 0!==d)?Cf(a,e):Af);b=new b(c,f);a.memoizedState=null!==b.state&&void 0!==b.state?b.state:null;b.updater=Jg;a.stateNode=b;b._reactInternalFiber=a;d&&(a=a.stateNode,a.__reactInternalMemoizedUnmaskedChildContext=e,a.__reactInternalMemoizedMaskedChildContext=f);return b}
@@ -1891,7 +1948,7 @@ var reactDom_development = createCommonjsModule(function (module, exports) {
 if (process.env.NODE_ENV !== "production") {
   (function() {
 
-var React = React$1__default;
+var React = React__default;
 var _assign = objectAssign;
 var Scheduler = scheduler;
 var checkPropTypes = checkPropTypes_1;
@@ -26938,7 +26995,7 @@ var render$1 = (function (props) {
     _items = [];
   }
 
-  var _useState = React$1.useState(_items),
+  var _useState = React.useState(_items),
       items = _useState[0],
       setItems = _useState[1];
 
@@ -27018,9 +27075,9 @@ var render$1 = (function (props) {
   };
 
   var Renderer = isDependant ? formik.Field : formik.FastField;
-  return /*#__PURE__*/React$1__default.createElement(React$1__default.Fragment, null, /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(PlatformContainer, {
     "data-id": "array-container"
-  }, /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+  }, /*#__PURE__*/React__default.createElement(PlatformContainer, {
     "data-id": "array-container-content",
     style: _extends({
       overflowX: "scroll",
@@ -27042,7 +27099,7 @@ var render$1 = (function (props) {
     if (!ContainerComponent) {
       ContainerComponent = function ContainerComponent(_ref2) {
         var children = _ref2.children;
-        return /*#__PURE__*/React$1__default.createElement(PlatformContainer, null, children);
+        return /*#__PURE__*/React__default.createElement(PlatformContainer, null, children);
       };
     }
 
@@ -27057,11 +27114,11 @@ var render$1 = (function (props) {
       return null;
     }
 
-    return /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+    return /*#__PURE__*/React__default.createElement(PlatformContainer, {
       "data-id": "array-container-content-entry",
       key: index,
       className: "form-control " + className
-    }, /*#__PURE__*/React$1__default.createElement(Renderer, {
+    }, /*#__PURE__*/React__default.createElement(Renderer, {
       "data-id": "array-renderer",
       className: 'renderer',
       type: params.type,
@@ -27183,7 +27240,7 @@ var render$1 = (function (props) {
           return null;
         }
 
-        return undefined( /*#__PURE__*/React$1__default.createElement(ContainerComponent, _extends({}, container, props.item, {
+        return undefined( /*#__PURE__*/React__default.createElement(ContainerComponent, _extends({}, container, props.item, {
           className: containerClassName(),
           arrayHelpers: arrayHelpers,
           onMoveDownRequired: onMoveDownRequired,
@@ -27197,14 +27254,14 @@ var render$1 = (function (props) {
           value: entry,
           containerProps: containersProps[itemId],
           onContainerPropsChanged: onContainerPropsChanged
-        }), /*#__PURE__*/React$1__default.createElement(Component, _extends({}, adaptedProps, {
+        }), /*#__PURE__*/React__default.createElement(Component, _extends({}, adaptedProps, {
           disabled: disabled,
           readOnly: readOnly,
           value: entry,
           onValueChanged: onEntryValuesChanged
         }))), portalContainer);
       } else {
-        return /*#__PURE__*/React$1__default.createElement(ContainerComponent, _extends({}, container, props.item, {
+        return /*#__PURE__*/React__default.createElement(ContainerComponent, _extends({}, container, props.item, {
           className: containerClassName(),
           arrayHelpers: arrayHelpers,
           onMoveDownRequired: onMoveDownRequired,
@@ -27218,14 +27275,14 @@ var render$1 = (function (props) {
           value: entry,
           containerProps: containersProps[itemId],
           onContainerPropsChanged: onContainerPropsChanged
-        }), /*#__PURE__*/React$1__default.createElement(Component, _extends({}, adaptedProps, {
+        }), /*#__PURE__*/React__default.createElement(Component, _extends({}, adaptedProps, {
           disabled: disabled,
           readOnly: readOnly,
           value: entry,
           onValueChanged: onEntryValuesChanged
         })));
       }
-    }), !hideErrors ? /*#__PURE__*/React$1__default.createElement(formik.ErrorMessage, {
+    }), !hideErrors ? /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
       name: itemId,
       component: "div",
       className: "error-message"
@@ -27236,26 +27293,26 @@ var render$1 = (function (props) {
         return null;
       }
 
-      return undefined( /*#__PURE__*/React$1__default.createElement(AddComponent, {
+      return undefined( /*#__PURE__*/React__default.createElement(AddComponent, {
         onAdd: onAdd,
         title: add.title,
         disabled: items.length >= props.item.maxItems
       }), add.portalContainer.current);
     }
 
-    return /*#__PURE__*/React$1__default.createElement(AddComponent, {
+    return /*#__PURE__*/React__default.createElement(AddComponent, {
       onAdd: onAdd,
       title: add.title,
       disabled: items.length >= props.item.maxItems
     });
-  }()), /*#__PURE__*/React$1__default.createElement("style", {
+  }()), /*#__PURE__*/React__default.createElement("style", {
     jsx: true
-  }, "      \n      \n      .renderer {\n        padding: 0.5rem; \n      }\n      .error-message {\n        /* text-sm text-red-600 pt-2 */\n        padding-top: 0.5rem; \n        font-size: 0.875rem;\n        line-height: 1.25rem; \n        color: #DC2626;\n      }\n    "));
+  }, "\n\n      .renderer {\n        padding: 0.5rem;\n      }\n      .error-message {\n        /* text-sm text-red-600 pt-2 */\n        padding-top: 0.5rem;\n        font-size: 0.875rem;\n        line-height: 1.25rem;\n        color: #DC2626;\n      }\n    "));
 });
 
 var ErrorMessage = (function (_ref) {
   var name = _ref.name;
-  return /*#__PURE__*/React$1__default.createElement(formik.Field, {
+  return /*#__PURE__*/React__default.createElement(formik.Field, {
     name: name,
     render: function render(_ref2) {
       var form = _ref2.form;
@@ -27268,7 +27325,7 @@ var ErrorMessage = (function (_ref) {
 
 var PlatformText = (function (props) {
   var children = props.children;
-  return /*#__PURE__*/React.createElement("p", props, children);
+  return /*#__PURE__*/React__default.createElement("p", props, children);
 });
 
 var LabelRenderer = (function (props) {
@@ -27280,11 +27337,11 @@ var LabelRenderer = (function (props) {
     return null;
   }
 
-  return /*#__PURE__*/React$1__default.createElement(React$1__default.Fragment, null, /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(PlatformContainer, {
     style: {
       marginBottom: "0.5rem"
     }
-  }, /*#__PURE__*/React$1__default.createElement(PlatformText, null, label)));
+  }, /*#__PURE__*/React__default.createElement(PlatformText, null, label)));
 });
 
 var ArrayField = (function (props) {
@@ -27298,10 +27355,10 @@ var ArrayField = (function (props) {
 
   var _type = input ? input : type;
 
-  return /*#__PURE__*/React$1__default.createElement(React$1__default.Fragment, null, /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(PlatformContainer, {
     className: "" + className,
     "data-id": "array-index"
-  }, /*#__PURE__*/React$1__default.createElement(LabelRenderer, props), /*#__PURE__*/React$1__default.createElement(formik.FieldArray, {
+  }, /*#__PURE__*/React__default.createElement(LabelRenderer, props), /*#__PURE__*/React__default.createElement(formik.FieldArray, {
     type: _type,
     name: id,
     component: function component(arrayHelpers) {
@@ -27309,13 +27366,13 @@ var ArrayField = (function (props) {
         arrayHelpers: arrayHelpers
       }));
     }
-  }), !hideErrors ? /*#__PURE__*/React$1__default.createElement(ErrorMessage, {
+  }), !hideErrors ? /*#__PURE__*/React__default.createElement(ErrorMessage, {
     name: id,
     component: "div",
     className: "error-message"
-  }) : null), /*#__PURE__*/React$1__default.createElement("style", {
+  }) : null), /*#__PURE__*/React__default.createElement("style", {
     jsx: true
-  }, "      \n      .error-message {\n        padding-top: 0.5rem; \n        font-size: 0.875rem;\n        line-height: 1.25rem; \n        color: #DC2626;\n      }\n    "));
+  }, "\n      .error-message {\n        padding-top: 0.5rem;\n        font-size: 0.875rem;\n        line-height: 1.25rem;\n        color: #DC2626;\n      }\n    "));
 });
 
 var SingleField = (function (props) {
@@ -27340,11 +27397,11 @@ var SingleField = (function (props) {
   var _id = id ? id : nanoid.nanoid();
 
   var Renderer = isDependant ? formik.Field : formik.FastField;
-  return /*#__PURE__*/React$1__default.createElement(React$1__default.Fragment, null, /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(PlatformContainer, {
     style: {
       marginBottom: "1rem"
     }
-  }, /*#__PURE__*/React$1__default.createElement(LabelRenderer, props), /*#__PURE__*/React$1__default.createElement(Renderer, {
+  }, /*#__PURE__*/React__default.createElement(LabelRenderer, props), /*#__PURE__*/React__default.createElement(Renderer, {
     type: _type,
     name: _id
   }, function (_ref) {
@@ -27373,7 +27430,9 @@ var SingleField = (function (props) {
 
     var disabled = props.isSubmitting || props.disabled || props.item && props.item.disabled;
     var readOnly = props.readOnly || props.props && props.props.readOnly;
-    return /*#__PURE__*/React$1__default.createElement("div", null, /*#__PURE__*/React$1__default.createElement(Component, _extends({}, props, {
+    return /*#__PURE__*/React__default.createElement("div", {
+      key: _id
+    }, /*#__PURE__*/React__default.createElement(Component, _extends({}, props, {
       disabled: disabled,
       readOnly: readOnly,
       value: props.values[id],
@@ -27381,7 +27440,7 @@ var SingleField = (function (props) {
       field: field,
       form: form,
       onValueChanged: onValueChanged
-    })), !hideErrors && id && /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+    })), !hideErrors && id && /*#__PURE__*/React__default.createElement(PlatformContainer, {
       style: {
         paddingLeft: "0.5rem",
         paddingRight: "0.5rem",
@@ -27390,20 +27449,20 @@ var SingleField = (function (props) {
         borderBottomRightRadius: "0.5rem",
         borderBottomLeftRadius: "0.5rem"
       }
-    }, /*#__PURE__*/React$1__default.createElement(formik.ErrorMessage, {
+    }, /*#__PURE__*/React__default.createElement(formik.ErrorMessage, {
       name: _id,
       component: "div",
       className: "error-message"
     })));
-  })), /*#__PURE__*/React$1__default.createElement("style", {
+  })), /*#__PURE__*/React__default.createElement("style", {
     jsx: true
-  }, "   \n      .error-message {\n        margin-top: 1.5rem;\n        text-align: center;\n        color: #DC2626;\n      }\n    "));
+  }, "\n      .error-message {\n        margin-top: 1.5rem;\n        text-align: center;\n        color: #DC2626;\n      }\n    "));
 });
 
 var fields = (function (props) {
   var inputs = props.inputs;
   var items = Array.isArray(inputs) ? inputs : inputs();
-  return /*#__PURE__*/React$1__default.createElement(formik.Form, null, items.map(function (item) {
+  return /*#__PURE__*/React__default.createElement(formik.Form, null, items.map(function (item) {
     var isMulti = item.isMulti;
 
     if (isMulti) {
@@ -27422,7 +27481,7 @@ var renderMultiItems = function renderMultiItems(props) {
   var _props$item = props.item,
       className = _props$item.className,
       items = _props$item.items;
-  return /*#__PURE__*/React$1__default.createElement("div", {
+  return /*#__PURE__*/React__default.createElement("div", {
     className: "#TODO -mb-2 " + className
   }, items.map(function (_item) {
     return renderItem(_extends({}, props, {
@@ -27446,9 +27505,9 @@ var renderItem = function renderItem(props) {
         return null;
       }
 
-      return undefined( /*#__PURE__*/React$1__default.createElement(ArrayField, props), portalContainer.current);
+      return undefined( /*#__PURE__*/React__default.createElement(ArrayField, props), portalContainer.current);
     } else {
-      return /*#__PURE__*/React$1__default.createElement(ArrayField, props);
+      return /*#__PURE__*/React__default.createElement(ArrayField, props);
     }
   }
 
@@ -27457,9 +27516,9 @@ var renderItem = function renderItem(props) {
       return null;
     }
 
-    return undefined( /*#__PURE__*/React$1__default.createElement(SingleField, props), portalContainer.current);
+    return undefined( /*#__PURE__*/React__default.createElement(SingleField, props), portalContainer.current);
   } else {
-    return /*#__PURE__*/React$1__default.createElement(SingleField, props);
+    return /*#__PURE__*/React__default.createElement(SingleField, props);
   }
 };
 
@@ -27553,43 +27612,47 @@ var yupFromSchema = (function (_ref) {
     required: []
   };
   var validatableInputs = inputs.filter(function (a) {
-    return a && a.validation;
+    return a && a.validations;
   });
   var config = {
     errMessages: {}
   };
 
-  for (var i in validatableInputs) {
-    var validatableInput = validatableInputs[i];
-    delete validatableInput.validation.messages;
-    var keys = Object.keys(validatableInput.validation);
+  for (var _iterator = _createForOfIteratorHelperLoose(validatableInputs), _step; !(_step = _iterator()).done;) {
+    var input = _step.value;
+    var validations = input.validations;
     var properties = {};
     var messages = {};
 
-    for (var j in keys) {
-      var key = keys[j];
-      properties[key] = validatableInput.validation[key].value;
-      messages[key] = validatableInput.validation[key].message;
+    for (var _iterator2 = _createForOfIteratorHelperLoose(validations), _step2; !(_step2 = _iterator2()).done;) {
+      var validation = _step2.value;
+      var kind = validation.kind;
+      properties[kind] = validation.value;
+      messages[kind] = validation.message;
     }
 
-    schema.properties[validatableInput.id] = _extends({
-      type: validatableInput.type
+    schema.properties[input.id] = _extends({
+      type: input.type ? input.type : 'string'
     }, properties);
 
-    if (validatableInput.validation.required) {
-      schema.required.push(validatableInput.id);
+    if (properties.required) {
+      schema.required.push(input.id);
     }
 
-    config.errMessages[validatableInput.id] = messages;
+    config.errMessages[input.id] = messages;
   }
 
   var yupSchema = schemaToYup.buildYup(schema, config);
   return yupSchema;
 });
 
+var PlatformLink = (function (props) {
+  var children = props.children;
+  return /*#__PURE__*/React__default.createElement("a", props, children);
+});
+
 var index = (function (props) {
-  var error = props.error,
-      onFormPropsChanged = props.onFormPropsChanged,
+  var onFormPropsChanged = props.onFormPropsChanged,
       _props$disableCache = props.disableCache,
       disableCache = _props$disableCache === void 0 ? false : _props$disableCache,
       _props$hideErrors = props.hideErrors,
@@ -27598,7 +27661,17 @@ var index = (function (props) {
       disabled = _props$disabled === void 0 ? false : _props$disabled,
       _props$readOnly = props.readOnly,
       readOnly = _props$readOnly === void 0 ? false : _props$readOnly,
-      children = props.children;
+      children = props.children,
+      _props$hideBrand = props.hideBrand,
+      hideBrand = _props$hideBrand === void 0 ? false : _props$hideBrand;
+
+  var _useState = React.useState(props.error),
+      error = _useState[0],
+      setError = _useState[1];
+
+  var _useState2 = React.useState(props.success),
+      success = _useState2[0],
+      setSuccess = _useState2[1];
 
   var _initialValues = props.initialValues ? props.initialValues : props.values;
 
@@ -27613,9 +27686,9 @@ var index = (function (props) {
     });
   }
 
-  var valuesRef = React$1.useRef(initialValues ? initialValues : {});
-  var cache = disableCache ? null : props.cache ? props.cache : React$1.useRef(new FormulaikCache()).current;
-  var containersProps = React$1.useRef({});
+  var valuesRef = React.useRef(initialValues ? initialValues : {});
+  var cache = disableCache ? null : props.cache ? props.cache : React.useRef(new FormulaikCache()).current;
+  var containersProps = React.useRef({});
 
   var onContainerPropsChanged = function onContainerPropsChanged(_ref) {
     var id = _ref.id,
@@ -27634,9 +27707,34 @@ var index = (function (props) {
 
   var onSubmit = function onSubmit(values, actions) {
     try {
+      var _temp3 = function _temp3() {
+        setSubmitting(false);
+        return result;
+      };
+
       var setValues = actions.setValues;
       setValues(valuesRef.current);
-      return Promise.resolve(props.onSubmit(valuesRef.current, actions));
+      setError(null);
+      setSuccess(null);
+      var setSubmitting = actions.setSubmitting;
+      setSubmitting(true);
+      var result = null;
+
+      var _temp4 = _catch(function () {
+        return Promise.resolve(props.onSubmit(valuesRef.current, _extends({}, actions, {
+          setError: setError
+        }))).then(function (result) {
+          var _success = result && result.message ? {
+            message: result.message
+          } : {};
+
+          setSuccess(_success);
+        });
+      }, function (e) {
+        setError(e);
+      });
+
+      return Promise.resolve(_temp4 && _temp4.then ? _temp4.then(_temp3) : _temp3(_temp4));
     } catch (e) {
       return Promise.reject(e);
     }
@@ -27652,7 +27750,7 @@ var index = (function (props) {
     onValuesChanged(values, params);
   };
 
-  return /*#__PURE__*/React$1__default.createElement(React$1__default.Fragment, null, /*#__PURE__*/React$1__default.createElement(formik.Formik, {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, null, /*#__PURE__*/React__default.createElement(formik.Formik, {
     initialValues: initialValues,
     validationSchema: validationSchema,
     validateOnBlur: true,
@@ -27675,12 +27773,33 @@ var index = (function (props) {
       readOnly: readOnly,
       hideErrors: hideErrors
     }));
-  }), children, error && /*#__PURE__*/React$1__default.createElement(PlatformContainer, {
+  }), children, /*#__PURE__*/React__default.createElement(PlatformContainer, {
     style: {
-      marginTop: "1.5rem",
-      textAlign: "center"
+      marginTop: "1.5rem"
     }
-  }, /*#__PURE__*/React$1__default.createElement(PlatformText, null, error.message)));
+  }, (error || props.error) && /*#__PURE__*/React__default.createElement(PlatformText, {
+    style: {
+      fontWeight: 800,
+      color: "red"
+    }
+  }, error ? error.message : props.error ? props.error.message : ""), success && success.message && /*#__PURE__*/React__default.createElement(PlatformText, {
+    style: {
+      fontWeight: 800,
+      color: "green"
+    }
+  }, success.message)), !hideBrand && /*#__PURE__*/React__default.createElement(PlatformContainer, {
+    style: {
+      marginTop: "1.5rem"
+    }
+  }, /*#__PURE__*/React__default.createElement(PlatformText, {
+    style: {
+      color: "#bababa",
+      fontSize: 12
+    }
+  }, "Made with ", /*#__PURE__*/React__default.createElement(PlatformLink, {
+    href: 'https://formulaik-core.github.io/documentation/',
+    target: 'blank'
+  }, "Formulaik"))));
 });
 
 module.exports = index;
