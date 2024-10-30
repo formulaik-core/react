@@ -4,7 +4,6 @@ import render from './render'
 import ErrorMessage from './errorMessage'
 import LabelRenderer from '../chunks/label'
 import CaptionRenderer from '../chunks/caption'
-
 import PlatformContainer from '../../platform/container/index.js'
 
 export default (props) => {
