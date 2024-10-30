@@ -4,6 +4,7 @@ import componentResolver from '../componentResolver'
 import { nanoid } from 'nanoid'
 import LabelRenderer from '../chunks/label'
 import PlatformContainer from '../../platform/container/index.js'
+import CaptionRenderer from '../chunks/caption'
 
 export default (props) => {
   const { item: {
@@ -86,6 +87,7 @@ export default (props) => {
           </div>
         }}
       </Renderer>
+      <CaptionRenderer {...props} />
     </PlatformContainer>
     <style jsx>{`
       .error-message {

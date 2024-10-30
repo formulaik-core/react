@@ -2,15 +2,15 @@ import React from 'react'
 import PlatformText from '../../../platform/text'
 import PlatformContainer from '../../../platform/container/index.js'
 
-const Label = (props) => {
-    const { label, hideLabel } = props.item
-    if (hideLabel || !label) {
+const Caption = (props) => {
+    const { caption, hideCaption } = props.item
+    if (hideCaption || !caption) {
         return null
     }
 
-    let Result = label
-    if (typeof label === 'function') {
-        Result = label({ ...props })
+    let Result = caption
+    if (typeof caption === 'function') {
+        Result = caption({ ...props })
     }
 
     return <React.Fragment>
@@ -20,7 +20,7 @@ const Label = (props) => {
             }}>
             {(typeof Result === 'string')
                 ? <PlatformText style={{
-
+                    fontSize: 12,
                 }}>{Result}</PlatformText>
                 : null}
             {(typeof Result === 'function')
@@ -30,4 +30,4 @@ const Label = (props) => {
     </React.Fragment>
 }
 
-export default Label
+export default Caption

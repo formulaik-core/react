@@ -3,6 +3,7 @@ import { FieldArray, } from 'formik'
 import render from './render'
 import ErrorMessage from './errorMessage'
 import LabelRenderer from '../chunks/label'
+import CaptionRenderer from '../chunks/caption'
 
 import PlatformContainer from '../../platform/container/index.js'
 
@@ -29,6 +30,7 @@ export default (props) => {
         name={id}
         //validateOnChange
         component={(arrayHelpers) => render({ ...props, arrayHelpers })} />
+      <CaptionRenderer {...props} />
       {/* <FieldArray
       type={type}
       name={id}
