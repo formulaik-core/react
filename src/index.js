@@ -116,12 +116,13 @@ export default (props) => {
     </Formik>
     {children}
     <PlatformContainer style={{
-      marginTop: "1.5rem",
+
       // textAlign: "center"
     }}>
       {(error || props.error) &&
         <PlatformText
           style={{
+            marginTop: "0.5rem",
             fontWeight: 800,
             color: "red"
             // textAlign: "center"
@@ -132,6 +133,7 @@ export default (props) => {
       {(success && success.message) &&
         <PlatformText
           style={{
+            marginTop: "0.5rem",
             fontWeight: 800,
             color: "green"
             // textAlign: "center"
