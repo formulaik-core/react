@@ -58,7 +58,8 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": ">= 0.16.0"
+    "react": ">= 0.16.0",
+    "react-dom": ">= 0.16.0"
   },
   "dependencies": {
     "schema-to-yup": "^1.12.18",
