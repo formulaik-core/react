@@ -3,6 +3,7 @@
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
+  "sideEffects": false,
   "version": "0.0.0-development",
   "description": "Formulaik React JS Engine",
   "author": "Formulaik",
@@ -15,6 +16,21 @@
     "dist",
     "src"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.modern.js",
+      "require": "./dist/index.js"
+    },
+    "./core": {
+      "import": "./dist/core/index.modern.js",
+      "require": "./dist/core/index.js"
+    },
+    "./cache": {
+      "import": "./dist/cache/index.modern.js",
+      "require": "./dist/cache/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "engines": {
     "node": ">=10"
   },
@@ -44,7 +60,7 @@
     "semantic-release": "semantic-release",
     "acp": "git add . && npm run commit && git push",
     "commit": "git-cz",
-    "start": "microbundle-crl watch --no-compress --format modern,cjs",
+    "start": "microbundle-crl watch --format modern,cjs",
     "prepare_": "run-s build",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
@@ -52,7 +68,11 @@
     "test:unit_": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:unit": "yarn node --require=dotenv/config --experimental-vm-modules --experimental-specifier-resolution=node $(yarn bin jest) --config ./jest.config.json",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "build:clean": "rm -rf dist",
+    "build:main": "microbundle-crl --format modern,cjs --no-sourcemap",
+    "build:core": "microbundle-crl build -i src/core/index.js -o dist/core/index.js -f modern,cjs --no-sourcemap",
+    "build:cache": "microbundle-crl build -i src/cache/index.js -o dist/cache/index.js -f modern,cjs --no-sourcemap",
+    "build": "run-s build:clean build:main build:core build:cache",
     "prepare": "run-s build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build"
@@ -63,7 +83,6 @@
   },
   "dependencies": {
     "schema-to-yup": "^1.12.18",
-    "nanoid": "^3.2.0",
     "formik": ">=2.4.6"
   },
   "devDependencies": {

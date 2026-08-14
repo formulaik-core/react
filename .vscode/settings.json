@@ -2,6 +2,17 @@
     "workbench.colorCustomizations": {
         "activityBar.background": "#5F032B",
         "titleBar.activeBackground": "#85043C",
-        "titleBar.activeForeground": "#FFFBFD"
+        "titleBar.activeForeground": "#FFFBFD",
+        "titleBar.inactiveBackground": "#5F032B",
+        "titleBar.inactiveForeground": "#FFFBFD",
+        "statusBar.background": "#5F032B",
+        "statusBar.foreground": "#FFFBFD",
+        "statusBar.debuggingBackground": "#5F032B",
+        "statusBar.debuggingForeground": "#FFFBFD",
+        "statusBar.noFolderBackground": "#5F032B",
+        "statusBar.noFolderForeground": "#FFFBFD"
+    },
+    "yaml.schemas": {
+        "https://www.artillery.io/schema.json": []
     }
 }

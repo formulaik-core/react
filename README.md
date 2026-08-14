@@ -115,6 +115,32 @@ export default (props) => {
 }
 ```
 
+## Bundle size
+
+The default package entry and the `@formulaik/react/core` subpath keep the same behavior: they auto-generate a Yup schema from `inputs` when `validationSchema` is not provided.
+
+If you want a smaller consumer bundle, use the lighter subpath exports:
+
+```jsx
+import Formulaik from '@formulaik/react/core'
+
+export default () => {
+  return (
+    <Formulaik
+      components={[FormulaikMui]}
+      values={values}
+      inputs={inputs}
+      onSubmit={onSubmit}
+    />
+  )
+}
+```
+
+Available subpath exports:
+
+- `@formulaik/react/core`: same form behavior as the default export, available as a dedicated subpath
+- `@formulaik/react/cache`: cache class only
+
 ## Versionning
 This repository follows the semantic branching model.
 

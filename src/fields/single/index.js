@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Field, ErrorMessage, FastField } from 'formik'
 import componentResolver from '../componentResolver'
-import { nanoid } from 'nanoid'
 import LabelRenderer from '../chunks/label'
 import PlatformContainer from '../../platform/container/index.js'
 import CaptionRenderer from '../chunks/caption'
+
+let generatedFieldId = 0
 
 export default (props) => {
   const { item: {
@@ -21,11 +22,17 @@ export default (props) => {
     item: props.item
   })
 
+  const fallbackIdRef = useRef(null)
+  if (!fallbackIdRef.current) {
+    generatedFieldId += 1
+    fallbackIdRef.current = `formulaik-field-${generatedFieldId}`
+  }
+
   if (!Component) {
     return null
   }
 
-  const _id = id ? id : nanoid()
+  const _id = id ? id : fallbackIdRef.current
   const Renderer = isDependant ? Field : FastField
 
   return <React.Fragment>
