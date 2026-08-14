@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Field, FastField, ErrorMessage as BaseErrorMesssage, } from 'formik'
 import componentResolver from '../../componentResolver'
 import AddButton from './chunks/add'
 import * as ReactDOM from 'react-dom'
 import PlatformContainer from '../../../platform/container/index.js'
 import React from 'react'
+
+let generatedArrayItemKey = 0
 
 export default (props) => {
   const {
@@ -28,6 +30,14 @@ export default (props) => {
   }
 
   const [items, setItems] = useState(_items)
+
+  const itemKeysRef = useRef(null)
+  if (itemKeysRef.current === null) {
+    itemKeysRef.current = _items.map(() => {
+      generatedArrayItemKey += 1
+      return generatedArrayItemKey
+    })
+  }
 
   let AddComponent = (add && add.component) ? add.component : componentResolver({
     ...props,
@@ -56,6 +66,10 @@ export default (props) => {
     }
 
     const _i = [...items, newItem]
+
+    generatedArrayItemKey += 1
+    itemKeysRef.current = [...itemKeysRef.current, generatedArrayItemKey]
+
     onValueChanged(_i, {
       resetItems: false,
       operation: {
@@ -134,7 +148,7 @@ export default (props) => {
 
           return <PlatformContainer
             data-id='array-container-content-entry'
-            key={index}
+            key={itemKeysRef.current[index]}
             className={`form-control ${className}`}>
 
             <Renderer
@@ -149,6 +163,11 @@ export default (props) => {
                   const _i = [...props.valuesRef.current[id]]
                   const object = _i[index]
                   _i.splice(index, 1)
+
+                  const _keys = [...itemKeysRef.current]
+                  _keys.splice(index, 1)
+                  itemKeysRef.current = _keys
+
                   onValueChanged(_i, {
                     resetItems: false,
                     operation: {
@@ -170,6 +189,14 @@ export default (props) => {
                   const other = _i[index + 1]
                   _i[index] = other
                   _i[index + 1] = object
+
+                  const _keys = [...itemKeysRef.current]
+                  const key = _keys[index]
+                  const otherKey = _keys[index + 1]
+                  _keys[index] = otherKey
+                  _keys[index + 1] = key
+                  itemKeysRef.current = _keys
+
                   onValueChanged(_i, {
                     resetItems: false,
                     operation: {
@@ -191,6 +218,14 @@ export default (props) => {
                   const other = _i[index - 1]
                   _i[index] = other
                   _i[index - 1] = object
+
+                  const _keys = [...itemKeysRef.current]
+                  const key = _keys[index]
+                  const otherKey = _keys[index - 1]
+                  _keys[index] = otherKey
+                  _keys[index - 1] = key
+                  itemKeysRef.current = _keys
+
                   onValueChanged(_i, {
                     resetItems: false,
                     operation: {

@@ -1,6 +1,9 @@
 export default class FormulaikCache {
     _data = {}
     _cdata = {}
+    _order = []
+    _maxEntries = 200
+
     constructor(props) {
 
     }
@@ -14,43 +17,51 @@ export default class FormulaikCache {
 
     add = ({ search, results, key }) => {
         const _key = key.toLowerCase()
+        const _search = (search || '').toLowerCase()
         if (!this.data[_key]) {
             this.data[_key] = {}
         }
-        this.data[_key][search] = [...results]
-        //console.log('Formulaik cache > add >', _key, search, results)
+
+        if (!this.data[_key][_search]) {
+            this._order.push(`${_key}::${_search}`)
+            if (this._order.length > this._maxEntries) {
+                const [oldKey, oldSearch] = this._order.shift().split('::')
+                if (this.data[oldKey]) {
+                    delete this.data[oldKey][oldSearch]
+                }
+            }
+        }
+
+        this.data[_key][_search] = [...results]
     }
 
     get = ({ search, key }) => {
         const _key = key.toLowerCase()
+        const _search = (search || '').toLowerCase()
         if (!this.data[_key]) {
-            //console.log('Formulaik cache > get > key is not present', _key)
             return null
         }
 
-        //console.log('Formulaik cache > get > key is present', _key, 'Returning', this.data[_key][search])
-        return this.data[_key][search]
+        return this.data[_key][_search]
     }
 
     clear = () => {
         this.data = {}
+        this._order = []
     }
 
 
     addComponent = ({ component, key }) => {
         const _key = key.toLowerCase()
         this.cdata[_key] = component
-        //console.log('Formulaik cache > add >', _key, search, results)
     }
 
     getComponent = ({ key }) => {
         const _key = key.toLowerCase()
         if (!this.cdata[_key]) {
-            //console.log('Formulaik cache > get > key is not present', _key)
             return null
         }
 
-        //console.log('Formulaik cache > get > key is present', _key, 'Returning', this.data[_key][search])
         return this.cdata[_key]
     }
 }

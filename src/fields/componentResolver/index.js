@@ -35,7 +35,6 @@ export default (props) => {
       continue
     }
     if (typeof library !== 'function') {
-      console.log('is not function', library)
       continue
     }
 

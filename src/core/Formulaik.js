@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Formik } from 'formik'
 import fields from '../fields'
 import FormulaikCache from '../cache'
@@ -27,19 +27,23 @@ export default (props) => {
   const _initialValues = props.initialValues ? props.initialValues : props.values
   const [initialValues, setInitialValues] = useState(computeInitialValues())
 
-  let validationSchema = null
-  if (props.validationSchema) {
-    validationSchema = (typeof props.validationSchema !== 'function')
-      ? props.validationSchema
-      : (props.validationSchema && props.validationSchema())
-  }
-  else {
+  const validationSchema = useMemo(() => {
+    if (props.validationSchema) {
+      return (typeof props.validationSchema !== 'function')
+        ? props.validationSchema
+        : (props.validationSchema && props.validationSchema())
+    }
+
     const inputs = Array.isArray(props.inputs) ? props.inputs : props.inputs()
-    validationSchema = yupFromSchema({ inputs })
-  }
+    return yupFromSchema({ inputs })
+  }, [props.validationSchema, props.inputs])
 
   const valuesRef = useRef(initialValues ? initialValues : {})
-  const cache = disableCache ? null : (props.cache ? props.cache : useRef(new FormulaikCache()).current)
+  const cacheRef = useRef(null)
+  if (cacheRef.current === null) {
+    cacheRef.current = new FormulaikCache()
+  }
+  const cache = disableCache ? null : (props.cache ? props.cache : cacheRef.current)
 
   useEffect(() => {
     const next = computeInitialValues()
