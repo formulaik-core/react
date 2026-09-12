@@ -3,6 +3,7 @@ import { Formik } from 'formik'
 import fields from '../fields'
 import FormulaikCache from '../cache'
 import yupFromSchema from '../lib/yupFromSchema.js'
+import isEqual from '../lib/isEqual.js'
 import PlatformContainer from '../platform/container/index.js'
 import PlatformText from '../platform/text/index.js'
 import PlatformLink from '../platform/link/index.js'
@@ -45,7 +46,25 @@ export default (props) => {
   }
   const cache = disableCache ? null : (props.cache ? props.cache : cacheRef.current)
 
+  // `props.values` reference changing is meant to signal "load a different
+  // record, reinitialize the form" - but a consumer that (often
+  // unintentionally) recomputes an equivalent `values` object literal on
+  // every render was getting that same reinitialize on every single field
+  // edit, silently discarding whichever field the form itself had already
+  // accumulated since mount (Formik's own `initialValues` reinitialize has
+  // the identical failure mode without `enableReinitialize`, which is off
+  // by default for exactly this reason). The isEqual guard makes this only
+  // fire for an actual data change, not merely a new reference - a
+  // genuinely different `values` (e.g. switching which record is being
+  // edited) still reinitializes exactly as before.
+  const previousValuesRef = useRef(props.values)
+
   useEffect(() => {
+    if (isEqual(previousValuesRef.current, props.values)) {
+      return
+    }
+    previousValuesRef.current = props.values
+
     const next = computeInitialValues()
     setInitialValues(next)
     valuesRef.current = next ? next : {}
