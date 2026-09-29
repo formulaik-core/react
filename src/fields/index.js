@@ -7,7 +7,7 @@ import PlatformForm from '../platform/form/index.js'
 export default (props) => {
   const { inputs } = props
   const items = Array.isArray(inputs) ? inputs : inputs()
-  return <PlatformForm>
+  return <PlatformForm onSubmit={props.handleSubmit}>
     {
       items.map(item => {
         const { isMulti } = item

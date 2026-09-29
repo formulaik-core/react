@@ -4,6 +4,7 @@ import componentResolver from '../componentResolver'
 import LabelRenderer from '../chunks/label'
 import PlatformContainer from '../../platform/container/index.js'
 import CaptionRenderer from '../chunks/caption'
+import usePendingValue, { resolveDebounce } from './usePendingValue.js'
 
 let generatedFieldId = 0
 
@@ -28,6 +29,32 @@ export default (props) => {
     fallbackIdRef.current = `formulaik-field-${generatedFieldId}`
   }
 
+  const commit = (value, params) => {
+    const {
+      resetItems = false
+    } = params ? params : {}
+    const { item: { id }, setFieldValue, setFieldTouched } = props
+
+    props._onValueChanged && props._onValueChanged({ id, value })
+
+    !resetItems && setFieldValue(id, value, true)
+    !resetItems && setFieldTouched(id, true, false)
+  }
+
+  const pending = usePendingValue({
+    commit,
+    registerPendingInput: props.registerPendingInput
+  })
+
+  // Focus leaving the field (not just moving inside it) hands a pending value over at once.
+  const onBlur = (e) => {
+    const next = e.relatedTarget
+    if (next && e.currentTarget.contains(next)) {
+      return
+    }
+    pending.flush()
+  }
+
   if (!Component) {
     return null
   }
@@ -45,30 +72,31 @@ export default (props) => {
       <Renderer type={_type} name={_id} >
         {({ field, form }) => {
 
+          // A component reports every change; the engine decides when the form gets it.
           const onValueChanged = (value, params) => {
-            const {
-              resetItems = false
-            } = params ? params : {}
-            //console.log('onValueChanged', value)
             if (!props.item.id) {
               return
             }
-            const { item: { id }, setFieldValue, setFieldTouched } = props
-
-            props._onValueChanged && props._onValueChanged({ id, value })
-
-            !resetItems && setFieldValue(id, value, true)
-            !resetItems && setFieldTouched(id, true, false)
+            const { debounce, ...rest } = params ? params : {}
+            pending.change(value, params ? rest : params, resolveDebounce({
+              item: props.item.debounce,
+              component: debounce,
+              form: props.debounce
+            }))
           }
 
           const disabled = props.isSubmitting || props.disabled || (props.item && props.item.disabled)
           const readOnly = props.readOnly || (props.props && props.props.readOnly)
-          return <div key={_id}>
+          // While a value is pending, the component gets back what it shows, not the form's older one.
+          const value = pending.pendingRef.current
+            ? pending.pendingRef.current.value
+            : props.values[id]
+          return <div key={_id} onBlur={onBlur}>
             <Component
               {...props}
               disabled={disabled}
               readOnly={readOnly}
-              value={props.values[id]}
+              value={value}
               error={props.errors[id]}
               field={field}
               form={form}
